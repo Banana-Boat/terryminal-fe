@@ -1,10 +1,9 @@
-import styles from "./App.module.scss";
+import Terryminal from "./components/terryminal";
 
 function App() {
-  const { VITE_WS_HOST, VITE_WS_PORT } = import.meta.env;
   return (
     <div>
-      {VITE_WS_HOST}:{VITE_WS_PORT}
+      <Terryminal />
     </div>
   );
 }

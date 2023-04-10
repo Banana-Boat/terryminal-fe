@@ -1,26 +1,20 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { Terminal } from "xterm";
 import "xterm/css/xterm.css";
-import { io } from "socket.io-client";
 
 import styles from "./index.module.scss";
 
+// 创建xterm
+const term = new Terminal();
+
 function Terryminal() {
   const terminalRef = useRef<HTMLDivElement>(null);
-  const { VITE_WS_HOST, VITE_WS_PORT } = import.meta.env;
 
-  useEffect(() => {
-    const term = new Terminal();
+  useLayoutEffect(() => {
     term.open(terminalRef.current!);
-  }, []);
-
-  useEffect(() => {
-    const socket = io(`ws://${VITE_WS_HOST}:${VITE_WS_PORT}`);
-    socket.on("connect", () => {
-      console.log("connected");
-    });
-    socket.on("message", (data) => {
-      console.log(data);
+    term.write("Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ");
+    term.onData((data) => {
+      term.write(data);
     });
   }, []);
 

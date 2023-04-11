@@ -1,28 +1,29 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
-import { Terminal } from "xterm";
+import { useLayoutEffect, useRef } from "react";
+import { MyTerm } from "./myTerm.js";
 import "xterm/css/xterm.css";
 
 import styles from "./index.module.scss";
-
-// 创建xterm
-const term = new Terminal();
+import { TermSocket } from "./termSocket.js";
 
 function Terryminal() {
-  const terminalRef = useRef<HTMLDivElement>(null);
+  const myTerm = useRef(new MyTerm()).current; // 创建MyTerm实例，确保只有一个
+  const termDomRef = useRef<HTMLDivElement>(null); // 用于获取MyTerm绑定的dom元素
 
   useLayoutEffect(() => {
-    term.open(terminalRef.current!);
-    term.write("Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ");
-    term.onData((data) => {
-      term.write(data);
-    });
+    /* 避免重复初始化 */
+    if (myTerm.term.element) return;
+
+    myTerm.term.open(termDomRef.current!);
+    const termSocket = new TermSocket();
+    termSocket
+      .init()
+      .then(() => {
+        myTerm.init(termSocket);
+      })
+      .catch(() => console.log("连接失败..."));
   }, []);
 
-  return (
-    <div className={styles.container}>
-      <div ref={terminalRef}></div>
-    </div>
-  );
+  return <div ref={termDomRef} className={styles.terminal}></div>;
 }
 
 export default Terryminal;

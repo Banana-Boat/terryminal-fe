@@ -17,6 +17,12 @@ export class MyTerm {
     });
 
     this.curInput = "";
+
+    this.greet();
+  }
+
+  greet() {
+    this.term.write("Hello from Terryminal!\r\n\r\n");
   }
 
   init(socket: TermSocket) {
@@ -32,9 +38,14 @@ export class MyTerm {
 
         case "run-cmd":
           const { result } = data as IRunCmdServerData;
+          if (this.curInput.length > 0) {
+            for (let i = 0; i < this.curInput.length; i++) {
+              this.term.write("\b \b");
+            }
+            this.curInput = "";
+          }
 
           this.term.write(result);
-          this.curInput = "";
 
           break;
 
@@ -44,7 +55,7 @@ export class MyTerm {
     });
 
     this.termSocket.start({
-      containerName: "xtg",
+      containerName: new Date().getTime().toString(),
     });
 
     this.term.onKey(({ key, domEvent: e }) => {
@@ -59,6 +70,8 @@ export class MyTerm {
           this.term.write("\b \b");
           this.curInput = this.curInput.slice(0, -1);
         }
+      } else if (e.code === "Tab") {
+        e.preventDefault();
       } else {
         this.curInput += key;
         this.term.write(key);

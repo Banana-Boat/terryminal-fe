@@ -1,29 +1,43 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { MyTerm } from "./myTerm.js";
 import "xterm/css/xterm.css";
 
 import styles from "./index.module.scss";
-import { TermSocket } from "./termSocket.js";
+import { MessageListener } from "../../contexts/term-socket/types.js";
+import { TermSocket } from "../../contexts/term-socket/termSocket.js";
 
-function Terryminal() {
-  const myTerm = useRef(new MyTerm()).current; // 创建MyTerm实例，确保只有一个
+interface IProps {
+  ptyID: string;
+  termSocket?: TermSocket;
+  addMsgListener: (ptyID: string, listener: MessageListener) => void;
+  removeMsgListener: (ptyID: string, listener: MessageListener) => void;
+}
+
+function Terryminal({
+  ptyID,
+  termSocket,
+  addMsgListener,
+  removeMsgListener,
+}: IProps) {
   const termDomRef = useRef<HTMLDivElement>(null); // 用于获取MyTerm绑定的dom元素
+  const myTerm = useRef<MyTerm>(new MyTerm(ptyID, termSocket)).current;
+
+  useEffect(() => {
+    addMsgListener(ptyID, myTerm.onMessage);
+    return () => removeMsgListener(ptyID, myTerm.onMessage);
+  }, [addMsgListener, removeMsgListener]);
 
   useLayoutEffect(() => {
-    /* 避免重复初始化 */
-    if (myTerm.term.element) return;
-
     myTerm.term.open(termDomRef.current!);
-    const termSocket = new TermSocket();
-    termSocket
-      .init()
-      .then(() => {
-        myTerm.init(termSocket);
-      })
-      .catch(() => console.log("连接失败..."));
   }, []);
 
-  return <div ref={termDomRef} className={styles.terminal}></div>;
+  return (
+    <>
+      <button onClick={() => myTerm.quit()}>退出</button>
+      <button onClick={() => myTerm.restart()}>重新启动</button>
+      <div ref={termDomRef} className={styles.terminal}></div>
+    </>
+  );
 }
 
 export default Terryminal;

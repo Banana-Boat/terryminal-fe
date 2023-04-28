@@ -1,13 +1,17 @@
 import { Terminal } from "xterm";
-import { TermSocket } from "./termSocket.js";
-import { IRunCmdServerData } from "./types.js";
+import { TermSocket } from "../../contexts/term-socket/termSocket.js";
+import {
+  IRunCmdServerData,
+  ITermSocketEventType,
+} from "../../contexts/term-socket/types.js";
 
 export class MyTerm {
   term: Terminal;
   termSocket?: TermSocket;
   curInput: string;
+  ptyID: string;
 
-  constructor() {
+  constructor(ptyID: string, socket?: TermSocket) {
     this.term = new Terminal({
       cursorBlink: true,
       theme: {
@@ -15,53 +19,25 @@ export class MyTerm {
         foreground: "#F5F8FA",
       },
     });
+    this.greet();
 
+    this.ptyID = ptyID;
+    this.termSocket = socket;
     this.curInput = "";
 
-    this.greet();
+    this.init();
+    this.termSocket?.start(this.ptyID);
   }
 
   greet() {
     this.term.write("Hello from Terryminal!\r\n\r\n");
   }
 
-  init(socket: TermSocket) {
-    this.termSocket = socket;
-    this.termSocket.socket.addEventListener("message", (msg) => {
-      console.log("onmessage: ", msg.data);
-
-      const { data, event } = JSON.parse(msg.data);
-
-      switch (event) {
-        case "start":
-          break;
-
-        case "run-cmd":
-          const { result } = data as IRunCmdServerData;
-          if (this.curInput.length > 0) {
-            for (let i = 0; i < this.curInput.length; i++) {
-              this.term.write("\b \b");
-            }
-            this.curInput = "";
-          }
-
-          this.term.write(result);
-
-          break;
-
-        case "close":
-          break;
-      }
-    });
-
-    this.termSocket.start({
-      containerName: new Date().getTime().toString(),
-    });
-
+  init() {
     this.term.onKey(({ key, domEvent: e }) => {
       if (e.code === "Enter") {
         if (this.curInput.length > 0) {
-          this.termSocket?.runCmd({
+          this.termSocket?.runCmd(this.ptyID, {
             cmd: this.curInput,
           });
         }
@@ -77,5 +53,38 @@ export class MyTerm {
         this.term.write(key);
       }
     });
+  }
+
+  onMessage(event: ITermSocketEventType, data: any) {
+    switch (event) {
+      case "start":
+        break;
+
+      case "run-cmd":
+        const { result, isError } = data as IRunCmdServerData;
+        if (isError) break;
+
+        if (this.curInput.length > 0) {
+          for (let i = 0; i < this.curInput.length; i++) {
+            this.term.write("\b \b");
+          }
+          this.curInput = "";
+        }
+
+        this.term.write(result);
+
+        break;
+
+      case "end":
+        break;
+    }
+  }
+
+  restart() {
+    this.termSocket?.start(this.ptyID);
+  }
+
+  quit() {
+    this.termSocket?.end(this.ptyID);
   }
 }

@@ -14,6 +14,7 @@ export class TermSocket {
 
     this.socket.onmessage = (msg) => {
       const { event, ptyID, data } = JSON.parse(msg.data) as ITermSocketMessage;
+      console.log("onmessage: ", event, ptyID, data);
       const listeners = this.msgListeners[ptyID] ?? [];
       listeners.forEach((listener) => listener(event, data));
     };
@@ -33,6 +34,7 @@ export class TermSocket {
 
   addMsgListener(ptyID: string, listener: MessageListener) {
     this.msgListeners[ptyID] = [...(this.msgListeners[ptyID] ?? []), listener];
+    console.log(this.msgListeners);
   }
 
   removeMsgListener(ptyID: string, listener: MessageListener) {

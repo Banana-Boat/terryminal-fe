@@ -1,16 +1,17 @@
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { TermSocket } from "./termSocket.js";
 import { MessageListener } from "./types.js";
 
 interface ITermSocketContext {
   isConnected: boolean;
-  termSocket?: TermSocket;
+  termSocket: TermSocket;
   addMsgListener: (ptyID: string, listener: MessageListener) => void;
   removeMsgListener: (ptyID: string, listener: MessageListener) => void;
 }
 
 const TermSocketContext = createContext<ITermSocketContext>({
   isConnected: false,
+  termSocket: new TermSocket(),
   addMsgListener: () => {},
   removeMsgListener: () => {},
 });
@@ -20,30 +21,23 @@ interface IProps {
 }
 
 function TermSocketProvider({ children }: IProps) {
-  const [termSocket, setTermSocket] = useState<TermSocket>();
+  const { termSocket } = useContext(TermSocketContext);
+
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socket = new TermSocket();
-    setTermSocket(socket);
-    socket.init().then(() => setIsConnected(true));
+    termSocket.init().then(() => setIsConnected(true));
 
-    return () => socket.close();
+    return () => termSocket.close();
   }, []);
 
-  const addMsgListener = useCallback(
-    (ptyID: string, listener: MessageListener) => {
-      termSocket?.addMsgListener(ptyID, listener);
-    },
-    [termSocket]
-  );
+  const addMsgListener = (ptyID: string, listener: MessageListener) => {
+    termSocket.addMsgListener(ptyID, listener);
+  };
 
-  const removeMsgListener = useCallback(
-    (ptyID: string, listener: MessageListener) => {
-      termSocket?.removeMsgListener(ptyID, listener);
-    },
-    [termSocket]
-  );
+  const removeMsgListener = (ptyID: string, listener: MessageListener) => {
+    termSocket.removeMsgListener(ptyID, listener);
+  };
 
   return (
     <TermSocketContext.Provider

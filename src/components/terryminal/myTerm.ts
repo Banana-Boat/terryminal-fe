@@ -7,11 +7,11 @@ import {
 
 export class MyTerm {
   term: Terminal;
-  termSocket?: TermSocket;
+  termSocket: TermSocket;
   curInput: string;
   ptyID: string;
 
-  constructor(ptyID: string, socket?: TermSocket) {
+  constructor(ptyID: string, socket: TermSocket) {
     this.term = new Terminal({
       cursorBlink: true,
       theme: {
@@ -26,7 +26,7 @@ export class MyTerm {
     this.curInput = "";
 
     this.init();
-    this.termSocket?.start(this.ptyID);
+    this.termSocket.start(this.ptyID);
   }
 
   greet() {
@@ -36,8 +36,10 @@ export class MyTerm {
   init() {
     this.term.onKey(({ key, domEvent: e }) => {
       if (e.code === "Enter") {
+        console.log(this.curInput);
+
         if (this.curInput.length > 0) {
-          this.termSocket?.runCmd(this.ptyID, {
+          this.termSocket.runCmd(this.ptyID, {
             cmd: this.curInput,
           });
         }
@@ -56,6 +58,7 @@ export class MyTerm {
   }
 
   onMessage(event: ITermSocketEventType, data: any) {
+    console.log(event, data);
     switch (event) {
       case "start":
         break;
@@ -81,10 +84,10 @@ export class MyTerm {
   }
 
   restart() {
-    this.termSocket?.start(this.ptyID);
+    this.termSocket.start(this.ptyID);
   }
 
   quit() {
-    this.termSocket?.end(this.ptyID);
+    this.termSocket.end(this.ptyID);
   }
 }

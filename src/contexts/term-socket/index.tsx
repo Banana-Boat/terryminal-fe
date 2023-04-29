@@ -3,14 +3,12 @@ import { TermSocket } from "./termSocket.js";
 import { MessageListener } from "./types.js";
 
 interface ITermSocketContext {
-  isConnected: boolean;
-  termSocket: TermSocket;
-  addMsgListener: (ptyID: string, listener: MessageListener) => void;
-  removeMsgListener: (ptyID: string, listener: MessageListener) => void;
+  termSocket: TermSocket; // socket实例对象
+  addMsgListener: (ptyID: string, listener: MessageListener) => void; // 添加某个pty的消息监听器
+  removeMsgListener: (ptyID: string, listener: MessageListener) => void; // 移除某个pty的消息监听器
 }
 
 const TermSocketContext = createContext<ITermSocketContext>({
-  isConnected: false,
   termSocket: new TermSocket(),
   addMsgListener: () => {},
   removeMsgListener: () => {},
@@ -21,13 +19,10 @@ interface IProps {
 }
 
 function TermSocketProvider({ children }: IProps) {
-  const { termSocket } = useContext(TermSocketContext);
+  const { termSocket } = useContext(TermSocketContext); // 获取socket实例对象
 
-  const [isConnected, setIsConnected] = useState(false);
-
+  // 组件销毁时关闭socket连接
   useEffect(() => {
-    termSocket.init().then(() => setIsConnected(true));
-
     return () => termSocket.close();
   }, []);
 
@@ -41,7 +36,7 @@ function TermSocketProvider({ children }: IProps) {
 
   return (
     <TermSocketContext.Provider
-      value={{ isConnected, termSocket, addMsgListener, removeMsgListener }}
+      value={{ termSocket, addMsgListener, removeMsgListener }}
     >
       {children}
     </TermSocketContext.Provider>

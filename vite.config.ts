@@ -20,10 +20,9 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/terminal-ws/, ""),
       },
       // 代理websocket连接
-      "/bot": {
+      "/chat": {
         target: `http://${env.VITE_BOT_HOST}:${env.VITE_BOT_PORT}`,
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/bot/, ""),
       },
     },
   },

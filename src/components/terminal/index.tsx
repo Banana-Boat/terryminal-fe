@@ -9,7 +9,7 @@ interface IProps {
   ptyID: string;
 }
 
-function Terryminal({ ptyID }: IProps) {
+function Terminal({ ptyID }: IProps) {
   const { termSocket, addMsgListener, removeMsgListener } =
     useContext(TermSocketContext);
 
@@ -42,4 +42,4 @@ function Terryminal({ ptyID }: IProps) {
   );
 }
 
-export default Terryminal;
+export default Terminal;

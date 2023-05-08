@@ -1,78 +1,91 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import styles from "./index.module.scss";
 import { ChatMessage, Role } from "./types.js";
-import { createParser } from "eventsource-parser";
+import { getChatMessage } from "./apis";
 
 interface IProps {}
-
-const controller = new AbortController();
 
 function ChatBot({}: IProps) {
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
+  /* 创建缓冲区用于存放sse流中的content，setMsgBuf存在异步更新问题，故采用msgBufRef获取最新数据 */
+  const [msgBuf, setMsgBuf] = useState("");
+  const msgBufRef = useRef("");
+  const updateMsgBuf = useCallback((val: string) => {
+    setMsgBuf(val);
+    msgBufRef.current = val;
+  }, []);
+
   const sendBtnHandle = useCallback(async () => {
     if (!inputValue) return;
 
-    const message = { role: Role.USER, content: inputValue };
+    const userMessage = { role: Role.USER, content: inputValue };
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
 
     try {
-      const response = await fetch("/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages: [...messages, message],
-        }),
-        signal: controller.signal,
-      });
+      getChatMessage(
+        { messages: [...messages, userMessage] },
+        (event, data) => {
+          switch (event) {
+            case "message":
+              const dataJSON = JSON.parse(data);
+              if (!dataJSON.content) return;
+              updateMsgBuf(msgBufRef.current + dataJSON.content);
+              break;
 
-      if (!response.body) return;
+            case "end":
+              const msg = {
+                role: Role.ASSISTANT,
+                content: msgBufRef.current,
+              };
+              setMessages((prev) => {
+                return [...prev, msg];
+              });
+              updateMsgBuf("");
+              break;
 
-      const parser = createParser((event) => {
-        if (event.type === "event") {
-          const { event: eventName, data } = event;
-
-          console.log("@@", eventName, data);
-        }
-      });
-
-      async function* iterableStreamAsync(
-        stream: ReadableStream
-      ): AsyncIterableIterator<Uint8Array> {
-        const reader = stream.getReader();
-        try {
-          while (true) {
-            const { value, done } = await reader.read();
-            if (done) {
-              return;
-            } else {
-              yield value;
-            }
+            case "error":
+              console.log("sse error", data);
+              updateMsgBuf("");
+              break;
           }
-        } finally {
-          reader.releaseLock();
         }
-      }
-
-      for await (const chunk of iterableStreamAsync(response.body)) {
-        const str = new TextDecoder().decode(chunk);
-        parser.feed(str);
-      }
-    } catch (error) {
-      console.log(error);
+      );
+    } catch (err) {
+      console.log("sse error", err);
     }
-  }, [inputValue]);
+  }, [inputValue, messages]);
+
+  const newChatBtnHandle = useCallback(() => {
+    setMessages([]);
+    setInputValue("");
+    updateMsgBuf("");
+  }, []);
 
   return (
     <>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
-      <button onClick={sendBtnHandle}>发送</button>
+      <div>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <button onClick={sendBtnHandle}>发送</button>
+        <button onClick={newChatBtnHandle}>新建对话</button>
+      </div>
+
+      <div>
+        {messages.map((message, index) => (
+          <p key={index} className={styles.message}>
+            <strong>{message.role}: </strong>
+            <span>{message.content}</span>
+          </p>
+        ))}
+
+        <p>{msgBuf}</p>
+      </div>
     </>
   );
 }

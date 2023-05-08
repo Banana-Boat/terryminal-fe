@@ -18,6 +18,7 @@ export class MyTerm {
         background: "#202B33",
         foreground: "#F5F8FA",
       },
+      rows: 15,
     });
     this.greet();
 

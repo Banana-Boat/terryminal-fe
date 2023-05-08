@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/marked": "^4.3.0",
     "axios": "^1.4.0",
     "eventsource-parser": "^1.0.0",
+    "marked": "^5.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "xterm": "^5.1.0"

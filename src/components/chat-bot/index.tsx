@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import styles from "./index.module.scss";
 import { ChatMessage, Role } from "./types.js";
 import { getChatMessage } from "./apis";
+import { marked } from "marked";
 
 interface IProps {}
 
@@ -66,11 +67,21 @@ function ChatBot({}: IProps) {
 
   return (
     <>
-      <div>
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          backgroundColor: "white",
+          height: 20,
+        }}
+      >
         <input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") sendBtnHandle();
+          }}
         />
         <button onClick={sendBtnHandle}>发送</button>
         <button onClick={newChatBtnHandle}>新建对话</button>
@@ -80,11 +91,19 @@ function ChatBot({}: IProps) {
         {messages.map((message, index) => (
           <p key={index} className={styles.message}>
             <strong>{message.role}: </strong>
-            <span>{message.content}</span>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: marked.parse(message.content),
+              }}
+            ></div>
           </p>
         ))}
 
-        <p>{msgBuf}</p>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: marked.parse(msgBuf),
+          }}
+        ></div>
       </div>
     </>
   );

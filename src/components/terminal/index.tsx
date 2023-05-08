@@ -5,11 +5,11 @@ import "xterm/css/xterm.css";
 import styles from "./index.module.scss";
 import { TermSocketContext } from "../../contexts/term-socket/index.js";
 
-interface IProps {
+interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   ptyID: string;
 }
 
-function Terminal({ ptyID }: IProps) {
+function Terminal({ ptyID, ...restProps }: IProps) {
   const { termSocket, addMsgListener, removeMsgListener } =
     useContext(TermSocketContext);
 
@@ -28,8 +28,7 @@ function Terminal({ ptyID }: IProps) {
   }, []);
 
   return (
-    <>
-      <button onClick={() => myTerm.quit()}>退出</button>
+    <div {...restProps}>
       <button
         onClick={() => {
           if (!myTerm.start()) alert("终端启动失败，请稍后重试");
@@ -37,8 +36,9 @@ function Terminal({ ptyID }: IProps) {
       >
         启动
       </button>
-      <div ref={termDomRef} className={styles.terminal}></div>
-    </>
+      <button onClick={() => myTerm.quit()}>退出</button>
+      <div ref={termDomRef}></div>
+    </div>
   );
 }
 

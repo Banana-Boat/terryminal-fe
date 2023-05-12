@@ -31,9 +31,7 @@ function ChatBot({}: IProps) {
         (event, data) => {
           switch (event) {
             case "message":
-              const dataJSON = JSON.parse(data);
-              if (!dataJSON.content) return;
-              updateMsgBuf(msgBufRef.current + dataJSON.content);
+              updateMsgBuf(msgBufRef.current + data);
               break;
 
             case "end":

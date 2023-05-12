@@ -7,6 +7,6 @@ interface ImportMetaEnv {
   readonly VITE_TERMINAL_WS_HOST: string;
   readonly VITE_TERMINAL_WS_PORT: number;
 
-  readonly VITE_BOT_HOST: string;
-  readonly VITE_BOT_PORT: number;
+  readonly VITE_GATEWAY_HOST: string;
+  readonly VITE_GATEWAY_PORT: number;
 }

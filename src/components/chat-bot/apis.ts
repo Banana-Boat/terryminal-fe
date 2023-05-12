@@ -11,7 +11,7 @@ export const getChatMessage = async (
   params: GetChatMessageRequest,
   onMessage: OnMessage
 ) => {
-  const response = await fetch("/chat", {
+  const response = await fetch("/chatbot/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

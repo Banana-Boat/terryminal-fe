@@ -19,9 +19,8 @@ export default defineConfig({
         ws: true,
         rewrite: (path) => path.replace(/^\/terminal-ws/, ""),
       },
-      // 代理websocket连接
-      "/chat": {
-        target: `http://${env.VITE_BOT_HOST}:${env.VITE_BOT_PORT}`,
+      "/chatbot/chat": {
+        target: `http://${env.VITE_GATEWAY_HOST}:${env.VITE_GATEWAY_PORT}`,
         changeOrigin: true,
       },
     },

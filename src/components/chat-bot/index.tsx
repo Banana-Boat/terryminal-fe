@@ -87,14 +87,14 @@ function ChatBot({}: IProps) {
 
       <div>
         {messages.map((message, index) => (
-          <p key={index} className={styles.message}>
+          <div key={index} className={styles.message}>
             <strong>{message.role}: </strong>
             <div
               dangerouslySetInnerHTML={{
                 __html: marked.parse(message.content),
               }}
             ></div>
-          </p>
+          </div>
         ))}
 
         <div

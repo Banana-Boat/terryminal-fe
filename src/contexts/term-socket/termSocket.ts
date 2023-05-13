@@ -11,7 +11,7 @@ export class TermSocket {
   constructor() {
     const { VITE_BASE_HOST, VITE_BASE_PORT } = import.meta.env;
     this.socket = new WebSocket(
-      `ws://${VITE_BASE_HOST}:${VITE_BASE_PORT}/terminal-ws`
+      `ws://${VITE_BASE_HOST}:${VITE_BASE_PORT}/terminal/ws`
     );
 
     // 解析消息，根据ptyID分发给对应的消息监听器

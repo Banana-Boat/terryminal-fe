@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.1.4",
+    "@chatscope/chat-ui-kit-react": "^1.10.1",
+    "@chatscope/chat-ui-kit-styles": "^1.4.0",
     "@types/marked": "^4.3.0",
+    "antd": "^5.5.2",
     "axios": "^1.4.0",
     "eventsource-parser": "^1.0.0",
     "marked": "^5.0.1",

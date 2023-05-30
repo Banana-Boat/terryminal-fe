@@ -4,6 +4,7 @@ import "xterm/css/xterm.css";
 
 import styles from "./index.module.scss";
 import { TermSocketContext } from "../../contexts/term-socket/index.js";
+import { Button } from "antd";
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   ptyID: string;
@@ -29,14 +30,17 @@ function Terminal({ ptyID, ...restProps }: IProps) {
 
   return (
     <div {...restProps}>
-      <button
-        onClick={() => {
-          if (!myTerm.start()) alert("终端启动失败，请稍后重试");
-        }}
-      >
-        启动
-      </button>
-      <button onClick={() => myTerm.quit()}>退出</button>
+      <div style={{ marginBottom: 10 }}>
+        <Button
+          onClick={() => {
+            if (!myTerm.start()) alert("终端启动失败，请稍后重试");
+          }}
+          style={{ marginRight: 10 }}
+        >
+          启动
+        </Button>
+        <Button onClick={() => myTerm.quit()}>退出</Button>
+      </div>
       <div ref={termDomRef}></div>
     </div>
   );

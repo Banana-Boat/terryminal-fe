@@ -3,12 +3,28 @@ import styles from "./index.module.scss";
 import { ChatMessage, Role } from "./types.js";
 import { getChatMessage } from "./apis";
 import { marked } from "marked";
+import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import {
+  MainContainer,
+  ChatContainer,
+  MessageList,
+  Message,
+  MessageInput,
+  ConversationHeader,
+  Avatar,
+  TypingIndicator,
+  MessageSeparator,
+} from "@chatscope/chat-ui-kit-react";
+import { InitMsg } from "./constants";
+import robotIcon from "../../assets/robot.svg";
+import { Button } from "antd";
+import { ClearOutlined } from "@ant-design/icons";
 
 interface IProps {}
 
 function ChatBot({}: IProps) {
   const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([InitMsg]);
 
   /* 创建缓冲区用于存放sse流中的content，setMsgBuf存在异步更新问题，故采用msgBufRef获取最新数据 */
   const [msgBuf, setMsgBuf] = useState("");
@@ -67,41 +83,71 @@ function ChatBot({}: IProps) {
     <>
       <div
         style={{
-          position: "sticky",
-          top: 0,
-          backgroundColor: "white",
-          height: 20,
+          height: "100%",
+          overflow: "hidden",
         }}
       >
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") sendBtnHandle();
-          }}
-        />
-        <button onClick={sendBtnHandle}>发送</button>
-        <button onClick={newChatBtnHandle}>新建对话</button>
-      </div>
+        <MainContainer responsive style={{ fontSize: "1em" }}>
+          <ChatContainer>
+            <ConversationHeader>
+              <Avatar src={robotIcon} name="Terry" />
+              <ConversationHeader.Content userName="Terry" />
+              <ConversationHeader.Actions>
+                <Button icon={<ClearOutlined />} onClick={newChatBtnHandle}>
+                  清空对话
+                </Button>
+              </ConversationHeader.Actions>
+            </ConversationHeader>
+            <MessageList
+              typingIndicator={
+                msgBuf && <TypingIndicator content="Terry正在发送消息" />
+              }
+            >
+              <MessageSeparator content={new Date().toDateString()} />
+              {messages.map((message, index) => (
+                <Message
+                  key={index}
+                  model={{
+                    sender: message.role,
+                    direction:
+                      message.role === Role.USER ? "outgoing" : "incoming",
+                    position: "single",
+                  }}
+                >
+                  <Message.HtmlContent
+                    className={styles.msgContent}
+                    html={marked.parse(message.content)}
+                  />
+                </Message>
+              ))}
 
-      <div>
-        {messages.map((message, index) => (
-          <div key={index} className={styles.message}>
-            <strong>{message.role}: </strong>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: marked.parse(message.content),
+              {msgBuf && (
+                <Message
+                  model={{
+                    sender: Role.ASSISTANT,
+                    direction: "incoming",
+                    position: "single",
+                  }}
+                >
+                  <Message.HtmlContent
+                    className={styles.msgContent}
+                    html={marked.parse(msgBuf)}
+                  />
+                </Message>
+              )}
+            </MessageList>
+
+            <MessageInput
+              value={inputValue}
+              onChange={(_, text) => setInputValue(text)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") sendBtnHandle();
               }}
-            ></div>
-          </div>
-        ))}
-
-        <div
-          dangerouslySetInnerHTML={{
-            __html: marked.parse(msgBuf),
-          }}
-        ></div>
+              onSend={sendBtnHandle}
+              attachButton={false}
+            />
+          </ChatContainer>
+        </MainContainer>
       </div>
     </>
   );

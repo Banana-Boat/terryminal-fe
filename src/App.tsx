@@ -1,12 +1,6 @@
-import { TermSocketProvider } from "./contexts/term-socket";
-import Terminal from "./components/terminal";
-import ChatBot from "./components/chat-bot";
 import "./App.module.scss";
-import { Avatar, Button, Image, Layout, Menu, theme } from "antd";
-
+import { Button, Image, Layout, Menu, theme } from "antd";
 const { Header, Content } = Layout;
-
-import logo from "./assets/terminal.svg";
 import {
   CodeOutlined,
   ControlOutlined,
@@ -14,43 +8,53 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+
+import logo from "./assets/terminal.svg";
+import LearnPage from "./pages/learn-page";
+import DashboardPage from "./pages/dashboard-page";
+import AboutPage from "./pages/about-page";
+import HomePage from "./pages/home-page";
+
 function App() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   return (
-    <>
-      <Layout className="layout">
-        <Header
+    <Layout className="layout">
+      <Header
+        style={{
+          background: colorBgContainer,
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          height: 64,
+          borderBottom: "1px solid #f0f0f0",
+          boxShadow: "#ececec 2px 2px 10px 0px",
+        }}
+      >
+        <div
           style={{
-            background: colorBgContainer,
-            position: "relative",
             display: "flex",
-            alignItems: "center",
-            height: 64,
-            borderBottom: "1px solid #f0f0f0",
-            boxShadow: "#ececec 2px 2px 10px 0px",
+            width: "100%",
+            justifyItems: "space-between",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyItems: "space-between",
-            }}
-          >
-            <div style={{ display: "flex", width: 180 }}>
-              <Image
-                style={{ width: 40, height: 40, marginRight: 10 }}
-                preview={false}
-                src={logo}
-              />
-              <span style={{ fontSize: 18, fontWeight: "bold" }}>
-                Terryminal
-              </span>
-            </div>
+          <div style={{ display: "flex", width: 180 }}>
+            <Image
+              style={{ width: 40, height: 40, marginRight: 10 }}
+              preview={false}
+              src={logo}
+            />
+            <span style={{ fontSize: 18, fontWeight: "bold" }}>Terryminal</span>
+          </div>
 
+          {/* 待改！！！！！ */}
+          {location.pathname !== "/" && (
             <Menu
               mode="horizontal"
               inlineIndent={100}
@@ -60,50 +64,48 @@ function App() {
                   key: "1",
                   icon: <ControlOutlined />,
                   label: "控制台",
+                  onClick: () => navigate("/dashboard"),
                 },
                 {
                   key: "2",
                   icon: <CodeOutlined />,
                   label: "学习",
+                  onClick: () => navigate("/learn"),
                 },
                 {
                   key: "3",
                   icon: <InfoCircleOutlined />,
                   label: "关于",
+                  onClick: () => navigate("/about"),
                 },
               ]}
             />
-          </div>
+          )}
+        </div>
 
-          <Button icon={<LogoutOutlined />}>注销</Button>
-        </Header>
-        <Content
-          style={{
-            background: colorBgContainer,
-            display: "flex",
-            height: "calc(100vh - 64px)",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around",
-              width: "60%",
-              padding: 10,
-            }}
-          >
-            <TermSocketProvider>
-              <Terminal ptyID="xtg1" />
-              <Terminal ptyID="xtg2" />
-            </TermSocketProvider>
-          </div>
-          <div style={{ width: "40%", margin: 10, overflow: "scroll" }}>
-            <ChatBot />
-          </div>
-        </Content>
-      </Layout>
-    </>
+        {/* 待改！！！！！ */}
+        {location.pathname !== "/" && (
+          <Button onClick={() => navigate("/")} icon={<LogoutOutlined />}>
+            注销
+          </Button>
+        )}
+      </Header>
+
+      <Content
+        style={{
+          background: colorBgContainer,
+          display: "flex",
+          height: "calc(100vh - 64px)",
+        }}
+      >
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route index path="/learn" element={<LearnPage />} />
+          <Route path="/about" element={<AboutPage />} />
+        </Routes>
+      </Content>
+    </Layout>
   );
 }
 

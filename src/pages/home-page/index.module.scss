@@ -1,0 +1,122 @@
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  margin: 6% auto 0;
+  justify-content: center;
+
+  .left {
+    width: 55%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      min-height: 270px;
+
+      p {
+        margin: 0;
+      }
+
+      .title {
+        color: transparent;
+        font-size: 60px;
+        line-height: 75px;
+        font-weight: bold;
+        span {
+          background: -webkit-linear-gradient(120deg, #bd34fe 30%, #ff3670);
+          -webkit-background-clip: text;
+        }
+      }
+
+      .subtitle {
+        font-size: 48px;
+        line-height: 75px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .desc {
+        color: #3c3c43bf;
+        font-size: 18px;
+        line-height: 30px;
+      }
+      :global {
+        .typed-cursor {
+          font-size: 22px;
+        }
+      }
+    }
+
+    .login {
+      width: 55%;
+
+      .input {
+        margin: 6px 0;
+      }
+
+      .btn-group {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+
+        button {
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+
+  .right {
+    display: flex;
+    justify-content: center;
+
+    .logo {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      transform: translateY(60%);
+    }
+
+    .logo-bg {
+      position: absolute;
+      width: 350px;
+      height: 500px;
+      // transform: translate(0, -15%);
+      border-radius: 50%;
+      background-image: linear-gradient(-45deg, #bd34fe 50%, #ff3670 50%);
+      filter: blur(60px);
+    }
+  }
+}

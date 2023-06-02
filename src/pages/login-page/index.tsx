@@ -6,7 +6,7 @@ import { Button, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 interface IProps {}
 
-function HomePage({}: IProps) {
+function LoginPage({}: IProps) {
   const navigate = useNavigate();
   const descDivRef = useRef<HTMLDivElement>(null);
 
@@ -47,7 +47,11 @@ function HomePage({}: IProps) {
             >
               登录
             </Button>
-            <Button size="large" shape="round">
+            <Button
+              onClick={() => navigate("/register")}
+              size="large"
+              shape="round"
+            >
               注册
             </Button>
             <Button type="link">忘记密码？</Button>
@@ -63,4 +67,4 @@ function HomePage({}: IProps) {
   );
 }
 
-export default HomePage;
+export default LoginPage;

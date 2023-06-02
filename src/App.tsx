@@ -14,7 +14,8 @@ import logo from "./assets/terminal.svg";
 import LearnPage from "./pages/learn-page";
 import DashboardPage from "./pages/dashboard-page";
 import AboutPage from "./pages/about-page";
-import HomePage from "./pages/home-page";
+import LoginPage from "./pages/login-page";
+import RegisterPage from "./pages/register-page";
 
 function App() {
   const {
@@ -99,9 +100,11 @@ function App() {
         }}
       >
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<LoginPage />} />
+          {/* <Route path="/" element={<RegisterPage />} /> */}
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route index path="/learn" element={<LearnPage />} />
+          <Route path="/learn" element={<LearnPage />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </Content>

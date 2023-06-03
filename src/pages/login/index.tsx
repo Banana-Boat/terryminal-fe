@@ -13,7 +13,7 @@ function LoginPage({}: IProps) {
   useEffect(() => {
     const typed = new Typed(descDivRef.current, {
       strings: [
-        "告别终端环境配置，浏览器环境开箱即用^600 <br />AI机器人为你解答一切关于Linux命令的疑问",
+        "告别终端环境配置，浏览器环境开箱即用 ^200 <br />AI机器人为你解答一切关于Linux命令的疑问",
       ],
       typeSpeed: 50,
     });
@@ -40,7 +40,7 @@ function LoginPage({}: IProps) {
 
           <div className={styles.btnGroup}>
             <Button
-              onClick={() => navigate("/learn")}
+              onClick={() => navigate("/dashboard")}
               type="primary"
               size="large"
               shape="round"

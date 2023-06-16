@@ -9,10 +9,11 @@ import DashboardLayout from "@/pages/dashboard";
 import TermManagementPage from "@/pages/dashboard/term-management";
 import UserInfoPage from "@/pages/dashboard/user-info";
 import NotFoundPage from "@/pages/not-found";
+import { useUserStore } from "@/stores/user";
 
 function AuthRouter({ children }: { children: React.ReactNode }) {
-  const token = true;
-  return <>{token ? children : <Navigate to="/login" replace />}</>;
+  const { isLogin } = useUserStore();
+  return <>{isLogin ? children : <Navigate to="/login" replace />}</>;
 }
 
 export const routes: RouteObject[] = [

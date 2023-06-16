@@ -14,10 +14,8 @@
   .form {
     display: flex;
     flex-direction: column;
-    .input {
-      .prop {
-        color: #00ca56;
-      }
+    .prop {
+      color: #00ca56;
     }
   }
 
@@ -26,5 +24,9 @@
     align-self: center;
     position: absolute;
     bottom: 50px;
+
+    button {
+      width: 100%;
+    }
   }
 }

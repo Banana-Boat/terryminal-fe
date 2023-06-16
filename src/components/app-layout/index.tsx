@@ -8,10 +8,19 @@ import { Layout, Menu, Button, Image } from "antd";
 import { Header, Content } from "antd/es/layout/layout";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import logo from "@/assets/terminal.svg";
+import { useUserStore } from "@/stores/user";
+import { useCallback } from "react";
 
 function AppLayout() {
   const navigate = useNavigate();
-  const location = useLocation();
+
+  const { isLogin, resetUser } = useUserStore();
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("token");
+    resetUser();
+    navigate("/login");
+  }, []);
 
   return (
     <Layout style={{ display: "flex", flexDirection: "column" }}>
@@ -44,43 +53,41 @@ function AppLayout() {
           </div>
 
           {/* 待改！！！！！ */}
-          {location.pathname !== "/login" &&
-            location.pathname !== "/register" && (
-              <Menu
-                mode="horizontal"
-                inlineIndent={100}
-                defaultSelectedKeys={["1"]}
-                items={[
-                  {
-                    key: "1",
-                    icon: <ControlOutlined />,
-                    label: "控制台",
-                    onClick: () => navigate("dashboard"),
-                  },
-                  {
-                    key: "2",
-                    icon: <CodeOutlined />,
-                    label: "学习",
-                    onClick: () => navigate("learn"),
-                  },
-                  {
-                    key: "3",
-                    icon: <InfoCircleOutlined />,
-                    label: "关于",
-                    onClick: () => navigate("about"),
-                  },
-                ]}
-              />
-            )}
+          {isLogin && (
+            <Menu
+              mode="horizontal"
+              inlineIndent={100}
+              defaultSelectedKeys={["1"]}
+              items={[
+                {
+                  key: "1",
+                  icon: <ControlOutlined />,
+                  label: "控制台",
+                  onClick: () => navigate("dashboard"),
+                },
+                {
+                  key: "2",
+                  icon: <CodeOutlined />,
+                  label: "学习",
+                  onClick: () => navigate("learn"),
+                },
+                {
+                  key: "3",
+                  icon: <InfoCircleOutlined />,
+                  label: "关于",
+                  onClick: () => navigate("about"),
+                },
+              ]}
+            />
+          )}
         </div>
 
         {/* 待改！！！！！ */}
-        {location.pathname !== "/login" &&
-          location.pathname !== "/register" && (
-            <Button onClick={() => navigate("login")} icon={<LogoutOutlined />}>
-              注销
-            </Button>
-          )}
+        {isLogin && (
+          <Button onClick={handleLogout} icon={<LogoutOutlined />}>
+            注销
+          </Button>
+        )}
       </Header>
 
       <Content

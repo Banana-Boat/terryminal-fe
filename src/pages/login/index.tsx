@@ -1,10 +1,18 @@
 import styles from "./index.module.scss";
 import logo from "@/assets/terminal_white.svg";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import Typed from "typed.js";
-import { Button, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { login } from "./api";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+
 interface IProps {}
+
+interface IFormValues {
+  email: string;
+  password: string;
+}
 
 function LoginPage({}: IProps) {
   const navigate = useNavigate();
@@ -21,6 +29,17 @@ function LoginPage({}: IProps) {
     return () => typed.destroy();
   });
 
+  const onFinish = useCallback(async (value: IFormValues) => {
+    try {
+      if (await login({ email: value.email, password: value.password })) {
+        message.success("登录成功", 2);
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      message.error("登录失败", 2);
+    }
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -35,27 +54,57 @@ function LoginPage({}: IProps) {
         </div>
 
         <div className={styles.login}>
-          <Input className={styles.input} placeholder="请输入邮箱" />
-          <Input className={styles.input} placeholder="请输入密码" />
+          <Form<IFormValues> onFinish={onFinish}>
+            <Form.Item
+              name="email"
+              rules={[
+                { required: true, message: "邮箱不可为空" },
+                {
+                  max: 50,
+                  pattern: new RegExp(
+                    "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$"
+                  ),
+                  message: "邮箱格式不正确",
+                },
+              ]}
+              hasFeedback
+            >
+              <Input prefix={<UserOutlined />} placeholder="请输入邮箱" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[
+                { required: true, message: "密码不可为空" },
+                { min: 6, message: "密码长度不少于6个字符" },
+              ]}
+              hasFeedback
+            >
+              <Input
+                prefix={<LockOutlined />}
+                type="password"
+                placeholder="请输入密码"
+              />
+            </Form.Item>
 
-          <div className={styles.btnGroup}>
-            <Button
-              onClick={() => navigate("/dashboard")}
-              type="primary"
-              size="large"
-              shape="round"
-            >
-              登录
-            </Button>
-            <Button
-              onClick={() => navigate("/register")}
-              size="large"
-              shape="round"
-            >
-              注册
-            </Button>
-            <Button type="link">忘记密码？</Button>
-          </div>
+            <Form.Item className={styles.btnGroup}>
+              <Button
+                htmlType="submit"
+                type="primary"
+                size="large"
+                shape="round"
+              >
+                登录
+              </Button>
+              <Button
+                onClick={() => navigate("/register")}
+                size="large"
+                shape="round"
+              >
+                注册
+              </Button>
+              <Button type="link">忘记密码？</Button>
+            </Form.Item>
+          </Form>
         </div>
       </div>
 

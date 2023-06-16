@@ -1,5 +1,4 @@
 import axios from "axios";
-import useUserStore from "@/stores/user";
 import { message } from "antd";
 
 const instance = axios.create({
@@ -12,13 +11,14 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     // 将token注入Authorization中
-    const { token } = useUserStore();
+    const token = localStorage.getItem("token");
+
     if (
       config.url !== "/user/login" &&
       config.url !== "/user/register" &&
       config.url !== "/user/sendCodeByEmail" &&
       config.url !== "/user/updatePassword" &&
-      token !== ""
+      token
     )
       config.headers.Authorization = `Bearer ${token}`;
 

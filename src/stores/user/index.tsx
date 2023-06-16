@@ -1,20 +1,33 @@
-import { create } from "zustand";
+import { createStore } from "zustand/vanilla";
 import { IUser } from "./types.js";
+import { useStore } from "zustand";
 
 interface IUserStore extends IUser {
-  token: string;
-  updateToken: (token: string) => void;
+  isLogin: boolean;
+  toggleLoginState: (isLogin: boolean) => void;
   updateUserInfo: (user: IUser) => void;
+  resetUser: () => void;
 }
 
-const useUserStore = create<IUserStore>((set) => ({
+const userStore = createStore<IUserStore>((set) => ({
   id: 0,
   nickname: "",
   email: "",
   chatbotToken: 0,
-  token: "",
-  updateToken: (token: string) => set({ token }),
+  isLogin: false,
+  toggleLoginState: (isLogin: boolean) => set({ isLogin }),
   updateUserInfo: (user: IUser) => set(user),
+  resetUser: () => {
+    set({
+      id: 0,
+      nickname: "",
+      email: "",
+      chatbotToken: 0,
+      isLogin: false,
+    });
+  },
 }));
 
-export default useUserStore;
+const useUserStore = () => useStore(userStore);
+
+export { userStore, useUserStore };

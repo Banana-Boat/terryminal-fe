@@ -1,5 +1,5 @@
 import axios from "@/utils/interceptor.js";
-import useUserStore from "@/stores/user/index.js";
+import { userStore } from "@/stores/user/index.js";
 import { IUser } from "@/stores/user/types.js";
 
 interface LoginReq {
@@ -16,10 +16,10 @@ export const login = async (params: LoginReq) =>
   axios.post<LoginReq, LoginResp>("/user/login", params).then(async (res) => {
     if (res) {
       const { token, user } = res;
-      const { updateToken, updateUserInfo } = useUserStore();
+      const { toggleLoginState, updateUserInfo } = userStore.getState();
 
       updateUserInfo(user);
-      updateToken(token);
+      toggleLoginState(true);
       localStorage.setItem("token", token);
 
       return true;

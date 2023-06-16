@@ -1,9 +1,9 @@
 import { Terminal } from "xterm";
-import { TermSocket } from "../../contexts/term-socket/termSocket.js";
+import { TermSocket } from "../../stores/term-socket/termSocket.js";
 import {
   IRunCmdServerData,
   ITermSocketEventType,
-} from "../../contexts/term-socket/types.js";
+} from "../../stores/term-socket/types.js";
 
 export class MyTerm {
   term: Terminal; // xterm实例

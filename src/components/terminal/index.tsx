@@ -3,7 +3,7 @@ import { MyTerm } from "./myTerm.js";
 import "xterm/css/xterm.css";
 
 import styles from "./index.module.scss";
-import { TermSocketContext } from "../../contexts/term-socket/index.js";
+import useTermSocketStore from "../../stores/term-socket";
 import { Button } from "antd";
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -12,7 +12,7 @@ interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 
 function Terminal({ ptyID, ...restProps }: IProps) {
   const { termSocket, addMsgListener, removeMsgListener } =
-    useContext(TermSocketContext);
+    useTermSocketStore();
 
   const termDomRef = useRef<HTMLDivElement>(null); // 用于获取MyTerm绑定的dom元素
   const myTerm = useRef<MyTerm>(new MyTerm(ptyID, termSocket)).current; // 创建MyTerm实例

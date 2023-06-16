@@ -1,5 +1,4 @@
 import ChatBot from "../../components/chat-bot";
-import { TermSocketProvider } from "../../contexts/term-socket";
 import Terminal from "../../components/terminal";
 
 interface IProps {}
@@ -16,10 +15,8 @@ function LearnPage({}: IProps) {
           padding: 10,
         }}
       >
-        <TermSocketProvider>
-          <Terminal ptyID="xtg1" />
-          <Terminal ptyID="xtg2" />
-        </TermSocketProvider>
+        <Terminal ptyID="xtg1" />
+        <Terminal ptyID="xtg2" />
       </div>
       <div style={{ width: "40%", margin: 10, overflow: "scroll" }}>
         <ChatBot />

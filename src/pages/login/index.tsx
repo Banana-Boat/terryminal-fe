@@ -1,5 +1,5 @@
 import styles from "./index.module.scss";
-import logo from "../../assets/terminal_white.svg";
+import logo from "@/assets/terminal_white.svg";
 import { useEffect, useRef } from "react";
 import Typed from "typed.js";
 import { Button, Input } from "antd";

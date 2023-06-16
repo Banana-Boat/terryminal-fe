@@ -1,21 +1,20 @@
-import { create } from 'zustand'
-import { IUser } from './types'
-
+import { create } from "zustand";
+import { IUser } from "./types.js";
 
 interface IUserStore extends IUser {
-  token: string
-  updateToken: (token: string) => void
-  updateUserInfo: (user: IUser) => void
+  token: string;
+  updateToken: (token: string) => void;
+  updateUserInfo: (user: IUser) => void;
 }
 
 const useUserStore = create<IUserStore>((set) => ({
   id: 0,
-  nickname: '',
-  email: '',
+  nickname: "",
+  email: "",
   chatbotToken: 0,
-  token: '',
+  token: "",
   updateToken: (token: string) => set({ token }),
   updateUserInfo: (user: IUser) => set(user),
-}))
+}));
 
-export default useUserStore
+export default useUserStore;

@@ -1,9 +1,9 @@
-import { useContext, useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { MyTerm } from "./myTerm.js";
 import "xterm/css/xterm.css";
 
 import styles from "./index.module.scss";
-import useTermSocketStore from "../../stores/term-socket";
+import useTermSocketStore from "@/stores/term-socket";
 import { Button } from "antd";
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {

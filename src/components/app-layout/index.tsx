@@ -7,7 +7,7 @@ import {
 import { Layout, Menu, Button, Image } from "antd";
 import { Header, Content } from "antd/es/layout/layout";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
-import logo from "../../assets/terminal.svg";
+import logo from "@/assets/terminal.svg";
 
 function AppLayout() {
   const navigate = useNavigate();

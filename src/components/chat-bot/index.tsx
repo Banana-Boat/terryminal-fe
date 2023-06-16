@@ -16,7 +16,7 @@ import {
   MessageSeparator,
 } from "@chatscope/chat-ui-kit-react";
 import { InitMsg } from "./constants";
-import robotIcon from "../../assets/robot.svg";
+import robotIcon from "@/assets/robot.svg";
 import { Button } from "antd";
 import { ClearOutlined } from "@ant-design/icons";
 

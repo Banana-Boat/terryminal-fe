@@ -1,11 +1,10 @@
 import styles from "./index.module.scss";
-import logo from "../../assets/terminal_white.svg";
 import { useEffect, useRef, useState } from "react";
 import Typed from "typed.js";
 import { Button, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArrowRightOutlined } from "@ant-design/icons";
-import MacWindow from "../../components/mac-window";
+import MacWindow from "@/components/mac-window";
 interface IProps {}
 
 function RegisterPage({}: IProps) {

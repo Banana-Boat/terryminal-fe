@@ -1,14 +1,14 @@
 import { Navigate, RouteObject } from "react-router-dom";
 
-import LoginPage from "../pages/login";
-import RegisterPage from "../pages/register";
-import LearnPage from "../pages/learn";
-import AboutPage from "../pages/about";
-import AppLayout from "../components/app-layout";
-import DashboardLayout from "../pages/dashboard";
-import TermManagementPage from "../pages/dashboard/term-management";
-import UserInfoPage from "../pages/dashboard/user-info";
-import NotFoundPage from "../pages/not-found";
+import LoginPage from "@/pages/login";
+import RegisterPage from "@/pages/register";
+import LearnPage from "@/pages/learn";
+import AboutPage from "@/pages/about";
+import AppLayout from "@/components/app-layout";
+import DashboardLayout from "@/pages/dashboard";
+import TermManagementPage from "@/pages/dashboard/term-management";
+import UserInfoPage from "@/pages/dashboard/user-info";
+import NotFoundPage from "@/pages/not-found";
 
 function AuthRouter({ children }: { children: React.ReactNode }) {
   const token = true;

@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import { useEffect, useRef } from "react";
 import Typed from "typed.js";
-import MacWindow from "../../components/mac-window";
+import MacWindow from "@/components/mac-window";
 interface IProps {}
 
 function NotFoundPage({}: IProps) {

@@ -1,5 +1,5 @@
-import ChatBot from "../../components/chat-bot";
-import Terminal from "../../components/terminal";
+import ChatBot from "@/components/chat-bot";
+import Terminal from "@/components/terminal";
 
 interface IProps {}
 

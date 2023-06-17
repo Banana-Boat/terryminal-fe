@@ -12,6 +12,7 @@ interface IProps {}
 interface IFormValues {
   email: string;
   password: string;
+  repassword: string;
   nickname: string;
 }
 
@@ -58,7 +59,7 @@ function RegisterPage({}: IProps) {
           width: "45%",
           height: "60%",
           minWidth: "600px",
-          minHeight: "380px",
+          minHeight: "530px",
         }}
       >
         <div>
@@ -96,6 +97,30 @@ function RegisterPage({}: IProps) {
                 { required: true, message: "密码不可为空" },
                 { min: 6, message: "密码长度不少于6个字符" },
                 { max: 20, message: "密码长度过长" },
+              ]}
+              hasFeedback
+            >
+              <Input.Password
+                size="large"
+                prefix={<ArrowRightOutlined />}
+                bordered={false}
+              />
+            </Form.Item>
+
+            <span className={styles.prop}>Repeat your password*: </span>
+            <Form.Item
+              name="repassword"
+              dependencies={["password"]}
+              rules={[
+                { required: true, message: "密码不可为空" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("两次输入的密码不一致"));
+                  },
+                }),
               ]}
               hasFeedback
             >

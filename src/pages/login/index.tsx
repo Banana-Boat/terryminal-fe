@@ -31,7 +31,7 @@ function LoginPage({}: IProps) {
 
   const onFinish = useCallback(async (value: IFormValues) => {
     try {
-      if (await login({ email: value.email, password: value.password })) {
+      if (await login({ ...value })) {
         message.success("登录成功", 2);
         navigate("/dashboard");
       }

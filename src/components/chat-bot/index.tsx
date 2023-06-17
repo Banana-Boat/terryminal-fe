@@ -34,7 +34,7 @@ function ChatBot({}: IProps) {
     msgBufRef.current = val;
   }, []);
 
-  const sendBtnHandle = useCallback(async () => {
+  const onSend = useCallback(async () => {
     if (!inputValue) return;
 
     const userMessage = { role: Role.USER, content: inputValue };
@@ -73,7 +73,7 @@ function ChatBot({}: IProps) {
     }
   }, [inputValue, messages]);
 
-  const newChatBtnHandle = useCallback(() => {
+  const onNewChat = useCallback(() => {
     setMessages([]);
     setInputValue("");
     updateMsgBuf("");
@@ -93,7 +93,7 @@ function ChatBot({}: IProps) {
               <Avatar src={robotIcon} name="Terry" />
               <ConversationHeader.Content userName="Terry" />
               <ConversationHeader.Actions>
-                <Button icon={<ClearOutlined />} onClick={newChatBtnHandle}>
+                <Button icon={<ClearOutlined />} onClick={onNewChat}>
                   清空对话
                 </Button>
               </ConversationHeader.Actions>
@@ -141,9 +141,9 @@ function ChatBot({}: IProps) {
               value={inputValue}
               onChange={(_, text) => setInputValue(text)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") sendBtnHandle();
+                if (e.key === "Enter") onSend();
               }}
-              onSend={sendBtnHandle}
+              onSend={onSend}
               attachButton={false}
             />
           </ChatContainer>

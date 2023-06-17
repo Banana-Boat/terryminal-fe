@@ -57,9 +57,9 @@ function RegisterPage({}: IProps) {
         title="NewUser@Terryminal:~/register"
         style={{
           width: "45%",
-          height: "60%",
+          height: "70%",
           minWidth: "600px",
-          minHeight: "530px",
+          minHeight: "540px",
         }}
       >
         <div>

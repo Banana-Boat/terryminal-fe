@@ -16,7 +16,7 @@ function AppLayout() {
 
   const { isLogin, resetUser } = useUserStore();
 
-  const handleLogout = useCallback(() => {
+  const onLogout = useCallback(() => {
     localStorage.removeItem("token");
     resetUser();
     navigate("/login");
@@ -84,7 +84,7 @@ function AppLayout() {
 
         {/* 待改！！！！！ */}
         {isLogin && (
-          <Button onClick={handleLogout} icon={<LogoutOutlined />}>
+          <Button onClick={onLogout} icon={<LogoutOutlined />}>
             注销
           </Button>
         )}

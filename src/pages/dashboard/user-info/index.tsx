@@ -78,7 +78,7 @@ function UserInfoPage({}: IProps) {
           </Form.Item>
 
           <Form.Item
-            label="密码"
+            label="新密码"
             name="password"
             rules={[{ min: 6, message: "密码长度不少于6个字符" }]}
           >

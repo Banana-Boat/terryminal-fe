@@ -7,13 +7,13 @@ interface RegisterReq {
 }
 
 interface RegisterResp {
-  isSuccess: boolean;
+  isOk: boolean;
 }
 
 export const register = async (params: RegisterReq) =>
   axios
     .post<RegisterReq, RegisterResp>("/user/register", params)
     .then(async (res) => {
-      if (res) return res.isSuccess;
+      if (res) return res.isOk;
       else return false;
     });

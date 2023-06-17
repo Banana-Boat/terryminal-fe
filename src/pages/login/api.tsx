@@ -2,6 +2,7 @@ import axios from "@/utils/interceptor.js";
 import { userStore } from "@/stores/user/index.js";
 import { IUser } from "@/stores/user/types.js";
 
+/* 登录 */
 interface LoginReq {
   email: string;
   password: string;
@@ -25,3 +26,22 @@ export const login = async (params: LoginReq) =>
       return true;
     } else return false;
   });
+
+/* 修改密码 */
+interface UpdatePwdReq {
+  email: string;
+  password: string;
+  code: string;
+}
+
+interface UpdatePwdResp {
+  isOk: boolean;
+}
+
+export const updatePwd = async (params: UpdatePwdReq) =>
+  axios
+    .patch<UpdatePwdReq, UpdatePwdResp>("/user/updatePassword", params)
+    .then(async (res) => {
+      if (res) return res.isOk;
+      else return false;
+    });

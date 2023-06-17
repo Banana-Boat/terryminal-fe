@@ -5,6 +5,7 @@ import "./index.module.scss";
 import { useCallback, useState } from "react";
 import { updateUserInfo } from "./api";
 import { formatFormData } from "@/utils";
+import PageHeader from "@/components/page-header";
 
 interface IProps {}
 
@@ -37,16 +38,15 @@ function UserInfoPage({}: IProps) {
 
   return (
     <>
-      <Descriptions
-        extra={
-          <>
-            <Button onClick={() => setIsShowEditUserInfoDrawer(true)}>
-              修改
-            </Button>
-          </>
-        }
+      <PageHeader
         title="个人信息"
-      >
+        btns={
+          <Button onClick={() => setIsShowEditUserInfoDrawer(true)}>
+            修改
+          </Button>
+        }
+      />
+      <Descriptions>
         <Descriptions.Item label="邮箱">{email}</Descriptions.Item>
         <Descriptions.Item label="昵称">{nickname}</Descriptions.Item>
         <Descriptions.Item label="密码">********</Descriptions.Item>

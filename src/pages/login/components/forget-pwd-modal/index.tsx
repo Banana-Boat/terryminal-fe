@@ -25,7 +25,7 @@ function ForgetPwdModal({ isShow, onCancel, onSubmit }: IProps) {
       message.error("请先填写邮箱", 2);
       return;
     }
-    if (await sendCodeByEmail({ email: form.getFieldValue("email") })) {
+    if (await sendCodeByEmail(form.getFieldValue("email"))) {
       message.success("验证码发送成功", 2);
       setIsSendCodeBtnDisabled(true);
       const timer = setInterval(() => {

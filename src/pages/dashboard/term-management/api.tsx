@@ -46,26 +46,7 @@ export const destroyTerm = async (terminalId: string) =>
       } else return false;
     });
 
-/* 获取终端模版 */
-interface GetTermTemplatesResp {
-  templates: ITerminalTemplate[];
-}
-
-export const getTermTemplates = async () =>
-  axios
-    .get<null, GetTermTemplatesResp>("/terminal/getTemplates")
-    .then(async (res) => {
-      if (res) {
-        const { templates } = res;
-        const { updateTermTemplates } = termStore.getState();
-
-        updateTermTemplates(templates);
-
-        return true;
-      } else return false;
-    });
-
-/* 获取用户终端模版 */
+/* 获取用户终端实例*/
 interface GetUserTermsResp {
   terminals: ITerminal[];
 }
@@ -84,7 +65,7 @@ export const getUserTerms = async () =>
       } else return false;
     });
 
-/* 创建终端实例 */
+/* 修改终端实例 */
 interface UpdateTermInfoReq {
   terminalId: string;
   remark: string;

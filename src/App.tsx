@@ -2,7 +2,7 @@ import { useNavigate, useRoutes } from "react-router-dom";
 import { routes } from "./router";
 import "./App.module.scss";
 import { useEffect } from "react";
-import { getUserInfo } from "./utils/api";
+import { getTermTemplates, getUserInfo } from "./utils/api";
 
 function App() {
   const router = useRoutes(routes);
@@ -17,6 +17,10 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+
+    getTermTemplates().catch((err) => {
+      console.log(err);
+    });
   }, []);
 
   return <>{router}</>;

@@ -25,6 +25,7 @@ function ForgetPwdModal({ isShow, onCancel, onSubmit }: IProps) {
       message.error("请先填写邮箱", 2);
       return;
     }
+
     if (await sendCodeByEmail(form.getFieldValue("email"))) {
       message.success("验证码发送成功", 2);
       setIsSendCodeBtnDisabled(true);
@@ -39,8 +40,6 @@ function ForgetPwdModal({ isShow, onCancel, onSubmit }: IProps) {
           }
         });
       }, 1000);
-    } else {
-      message.error("验证码发送失败", 2);
     }
   }, [form]);
 

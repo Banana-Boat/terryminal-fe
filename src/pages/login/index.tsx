@@ -50,8 +50,6 @@ function LoginPage({}: IProps) {
       if (await updatePwd(value)) {
         message.success("密码修改成功", 2);
         setIsShowForgetPwdModal(false);
-      } else {
-        message.error("密码修改失败", 2);
       }
     },
     []

@@ -16,7 +16,7 @@ export function formatTime(seconds: number) {
   const res =
     (hours > 0 ? hours + "小时" : "") +
     (minutes > 0 ? minutes + "分钟" : "") +
-    (remainingSeconds > 0 ? remainingSeconds + "秒" : "");
+    (remainingSeconds >= 0 ? remainingSeconds + "秒" : "");
 
   return res;
 }

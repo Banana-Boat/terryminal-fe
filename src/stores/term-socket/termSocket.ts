@@ -5,10 +5,10 @@ import {
 } from "./types.js";
 
 export class TermSocket {
-  socket: WebSocket;
+  socket: WebSocket | undefined;
   msgListeners: Record<string, MessageListener[]> = {};
 
-  constructor() {
+  connect() {
     const { VITE_BASE_HOST, VITE_BASE_PORT } = import.meta.env;
     this.socket = new WebSocket(
       `ws://${VITE_BASE_HOST}:${VITE_BASE_PORT}/terminal/ws`
@@ -40,18 +40,18 @@ export class TermSocket {
 
   // 判断socket是否已经成功连接
   isConnected() {
-    return this.socket.readyState === 1;
+    return this.socket ? this.socket.readyState === 1 : false;
   }
 
   // 关闭socket连接
   close() {
-    if (this.isConnected()) this.socket.close();
+    if (this.isConnected()) this.socket?.close();
   }
 
   // 启动Pty
   start(ptyID: string) {
     if (this.isConnected())
-      this.socket.send(
+      this.socket?.send(
         JSON.stringify({
           ptyID: ptyID,
           event: "start",
@@ -62,7 +62,7 @@ export class TermSocket {
   // 结束Pty
   end(ptyID: string) {
     if (this.isConnected())
-      this.socket.send(
+      this.socket?.send(
         JSON.stringify({
           ptyID: ptyID,
           event: "end",
@@ -73,7 +73,7 @@ export class TermSocket {
   // 执行命令
   runCmd(ptyID: string, data: IRunCmdClientData) {
     if (this.isConnected())
-      this.socket.send(
+      this.socket?.send(
         JSON.stringify({
           ptyID: ptyID,
           event: "run-cmd",

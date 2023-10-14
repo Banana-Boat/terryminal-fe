@@ -18,6 +18,7 @@ instance.interceptors.request.use(
       config.url !== "/user/register" &&
       config.url !== "/user/sendCodeByEmail" &&
       config.url !== "/user/updatePassword" &&
+      config.url !== "/terminal/getTemplates" &&
       token
     )
       config.headers.Authorization = `Bearer ${token}`;

@@ -10,13 +10,14 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getUserInfo()
-      .then((res) => {
-        if (res) navigate("/dashboard");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (localStorage.getItem("token")) {
+        getUserInfo().then((res) => {
+            if (res) navigate("/dashboard");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
 
     getTermTemplates().catch((err) => {
       console.log(err);

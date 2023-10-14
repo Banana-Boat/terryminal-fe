@@ -4,7 +4,7 @@ import { Button, Drawer, Form, Input, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
 
 export interface ICreateTermFormValues {
-  templateId: number;
+  templateID: number;
   remark: string;
 }
 
@@ -34,7 +34,7 @@ function CreateTermDrawer({ isShow, onClose, onFinish }: IProps) {
       >
         <Form.Item
           label="终端模版"
-          name="templateId"
+          name="templateID"
           rules={[{ required: true, message: "终端模版不可为空" }]}
         >
           <Select

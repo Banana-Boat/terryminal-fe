@@ -11,7 +11,7 @@ export interface ITerminal {
   ownerId: number;
   remark: string;
   size: string;
-  templateId: number;
+  templateID: number;
   totalDuration: number;
 }
 

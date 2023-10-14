@@ -27,7 +27,7 @@ const columns: ColumnsType<ITerminal> = [
   {
     title: "实例名称",
     dataIndex: "name",
-    width: 100,
+    width: 150,
     fixed: "left",
   },
   {
@@ -52,7 +52,7 @@ const columns: ColumnsType<ITerminal> = [
       record,
       editable: true,
       onSave: async (row: ITerminal) => {
-        if (await updateTermInfo({ terminalId: row.id, remark: row.remark })) {
+        if (await updateTermInfo({ terminalID: row.id, remark: row.remark })) {
           message.success("修改成功", 2);
         }
       },
@@ -62,12 +62,12 @@ const columns: ColumnsType<ITerminal> = [
   },
   {
     title: "终端模版",
-    dataIndex: "templateId",
+    dataIndex: "templateID",
     width: 200,
-    render: (templateId: number) => {
+    render: (templateID: number) => {
       const template = termStore
         .getState()
-        .termTemplates.find((item) => item.id === templateId);
+        .termTemplates.find((item) => item.id === templateID);
 
       return !template ? (
         <Typography.Text type="secondary" italic>

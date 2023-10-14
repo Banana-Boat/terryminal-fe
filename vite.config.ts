@@ -12,8 +12,8 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       "/api": {
-        // target: `http://${env.VITE_BASE_HOST}:${env.VITE_BASE_PORT}`,
-        target: "http://127.0.0.1:4523/m1/2727821-0-default",
+        target: `http://${env.VITE_BASE_HOST}:${env.VITE_BASE_PORT}`,
+        // target: "http://127.0.0.1:4523/m1/2727821-0-default",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

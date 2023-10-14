@@ -4,7 +4,7 @@ import axios from "@/utils/interceptor.js";
 
 /* 创建终端实例 */
 interface CreateTermReq {
-  templateId: number;
+  templateID: number;
   remark: string;
 }
 
@@ -31,15 +31,15 @@ interface DestroyTermResp {
   isOk: boolean;
 }
 
-export const destroyTerm = async (terminalId: string) =>
+export const destroyTerm = async (terminalID: string) =>
   axios
-    .delete<null, DestroyTermResp>("/terminal/destroy?" + terminalId)
+    .delete<null, DestroyTermResp>("/terminal/destroy?terminalID=" + terminalID)
     .then(async (res) => {
       if (res) {
         const { isOk } = res;
         if (isOk) {
           const { deleteTermById } = termStore.getState();
-          deleteTermById(terminalId);
+          deleteTermById(terminalID);
         }
 
         return isOk;
@@ -67,7 +67,7 @@ export const getUserTerms = async () =>
 
 /* 修改终端实例 */
 interface UpdateTermInfoReq {
-  terminalId: string;
+  terminalID: string;
   remark: string;
 }
 
@@ -86,7 +86,7 @@ export const updateTermInfo = async (params: UpdateTermInfoReq) =>
         const { terminal } = res;
         const { updateTermById } = termStore.getState();
 
-        updateTermById(params.terminalId, terminal);
+        updateTermById(params.terminalID, terminal);
 
         return true;
       } else return false;

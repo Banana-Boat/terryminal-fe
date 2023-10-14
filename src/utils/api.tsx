@@ -10,7 +10,7 @@ interface GetUserInfoResp {
 }
 
 export const getUserInfo = async () =>
-  axios.get<null, GetUserInfoResp>("/user/getUserInfo").then(async (res) => {
+  axios.get<null, GetUserInfoResp>("/user/getInfo").then(async (res) => {
     if (res) {
       const { user } = res;
       const { updateUserInfo, toggleLoginState } = userStore.getState();

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { login, updatePwd } from "./api";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import ForgetPwdModal from "./components/forget-pwd-modal";
+import { IFormValues as IForgetPwdModalFormValues } from "./components/forget-pwd-modal";
 
 interface IProps {}
 
@@ -46,7 +47,7 @@ function LoginPage({}: IProps) {
   /* 忘记密码相关 */
   const [isShowForgetPwdModal, setIsShowForgetPwdModal] = useState(false);
   const onForgetPwdModalSubmit = useCallback(
-    async (value: { email: string; password: string; code: string }) => {
+    async (value: IForgetPwdModalFormValues) => {
       if (await updatePwd(value)) {
         message.success("密码修改成功", 2);
         setIsShowForgetPwdModal(false);

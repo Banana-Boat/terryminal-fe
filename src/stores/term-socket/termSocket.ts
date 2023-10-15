@@ -8,22 +8,39 @@ export class TermSocket {
   socket: WebSocket | undefined;
   msgListeners: Record<string, MessageListener[]> = {};
 
-  connect() {
-    const { VITE_BASE_HOST, VITE_BASE_PORT } = import.meta.env;
-    this.socket = new WebSocket(
-      `ws://${VITE_BASE_HOST}:${VITE_BASE_PORT}/terminal/ws`
-    );
+  open() {
+    return new Promise((resolve, reject) => {
+      const { VITE_BASE_HOST, VITE_BASE_PORT } = import.meta.env;
+      const token = localStorage.getItem("token")
+      if (!token) resolve(false)
 
-    // 解析消息，根据ptyID分发给对应的消息监听器
-    this.socket.addEventListener("message", (msg) => {
-      const { event, ptyID, data } = JSON.parse(msg.data) as ITermSocketMessage;
-      const listeners = this.msgListeners[ptyID] ?? [];
-      listeners.forEach((listener) => listener(event, data));
-    });
+      this.socket = new WebSocket(
+        `ws://${VITE_BASE_HOST}:${VITE_BASE_PORT}/terminal/ws?token=${token}`
+      );
 
-    this.socket.addEventListener("close", (e) => console.log("onclose: ", e));
-    this.socket.addEventListener("error", (e) => console.log("onerror: ", e));
-    this.socket.addEventListener("open", () => console.log("onpen"));
+      // 解析消息，根据ptyID分发给对应的消息监听器
+      this.socket.addEventListener("message", (msg) => {
+        const { event, ptyID, data } = JSON.parse(msg.data) as ITermSocketMessage;
+        const listeners = this.msgListeners[ptyID] ?? [];
+        console.log("onmessage: ", event, ptyID, data);
+        listeners.forEach((listener) => listener(event, data));
+      });
+
+      this.socket.addEventListener("close", (e) => console.log("onclose: ", e));
+      this.socket.addEventListener("error", (e) => {
+        console.log("onerror: ", e);
+        resolve(false)
+      });
+      this.socket.addEventListener("open", () => {
+        console.log("onopen");
+        resolve(true)
+      });
+    })
+  }
+
+  // 关闭socket连接
+  close() {
+    if (this.isConnected()) this.socket?.close();
   }
 
   // 添加某个pty的消息监听器
@@ -41,11 +58,6 @@ export class TermSocket {
   // 判断socket是否已经成功连接
   isConnected() {
     return this.socket ? this.socket.readyState === 1 : false;
-  }
-
-  // 关闭socket连接
-  close() {
-    if (this.isConnected()) this.socket?.close();
   }
 
   // 启动Pty

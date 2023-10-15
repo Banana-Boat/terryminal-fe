@@ -8,7 +8,7 @@ export interface IUser {
 export interface ITerminal {
   id: string;
   name: string;
-  ownerId: number;
+  ownerID: number;
   remark: string;
   size: string;
   templateID: number;

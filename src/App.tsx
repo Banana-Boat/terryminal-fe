@@ -11,11 +11,12 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-        getUserInfo().then((res) => {
-            if (res) navigate("/dashboard");
+      getUserInfo()
+        .then((res) => {
+          if (res) navigate("/dashboard");
         })
         .catch((err) => {
-            console.log(err);
+          console.log(err);
         });
     }
 

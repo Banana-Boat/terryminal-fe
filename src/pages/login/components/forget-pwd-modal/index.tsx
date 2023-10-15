@@ -8,7 +8,7 @@ interface IProps {
   onCancel: () => void;
 }
 
-interface IFormValues {
+export interface IFormValues {
   email: string;
   password: string;
   code: string;
@@ -17,12 +17,26 @@ interface IFormValues {
 function ForgetPwdModal({ isShow, onCancel, onSubmit }: IProps) {
   const form = Form.useForm<IFormValues>()[0];
 
+  const onOk = useCallback(() => {
+    const { email, password, code } = form.getFieldsValue([
+      "email",
+      "password",
+      "code",
+    ]);
+    if (!email || !password || !code) {
+      message.warning("填写信息有误", 2);
+      return;
+    }
+    onSubmit({ email, password, code });
+    form.resetFields();
+  }, [form]);
+
   /* 验证码相关 */
   const [isSendCodeBtnDisabled, setIsSendCodeBtnDisabled] = useState(false);
   const [sendCodeBtnSecond, setSendCodeBtnSecond] = useState(60);
   const onSendCode = useCallback(async () => {
     if (!form.getFieldValue("email")) {
-      message.error("请先填写邮箱", 2);
+      message.warning("请先填写邮箱", 2);
       return;
     }
 
@@ -46,11 +60,11 @@ function ForgetPwdModal({ isShow, onCancel, onSubmit }: IProps) {
   return (
     <Modal
       open={isShow}
-      onCancel={onCancel}
-      onOk={() => {
-        onSubmit(form.getFieldsValue(["email", "password", "code"]));
+      onCancel={() => {
+        onCancel();
         form.resetFields();
       }}
+      onOk={onOk}
       title="忘记密码"
       okText="提交"
       cancelText="取消"

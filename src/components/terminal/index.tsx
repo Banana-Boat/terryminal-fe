@@ -19,9 +19,10 @@ function Terminal({ ptyID, ...restProps }: IProps) {
 
   // 注册该ptyID的消息监听器
   useEffect(() => {
+    console.log("addMsgListener", ptyID);
     addMsgListener(ptyID, myTerm.onMessage.bind(myTerm));
     return () => removeMsgListener(ptyID, myTerm.onMessage.bind(myTerm));
-  }, []);
+  }, [ptyID, addMsgListener, removeMsgListener]);
 
   // 绑定MyTerm实例与dom
   useLayoutEffect(() => {
@@ -30,17 +31,6 @@ function Terminal({ ptyID, ...restProps }: IProps) {
 
   return (
     <div {...restProps}>
-      <div style={{ marginBottom: 10 }}>
-        <Button
-          onClick={() => {
-            if (!myTerm.start()) alert("终端启动失败，请稍后重试");
-          }}
-          style={{ marginRight: 10 }}
-        >
-          启动
-        </Button>
-        <Button onClick={() => myTerm.quit()}>退出</Button>
-      </div>
       <div ref={termDomRef}></div>
     </div>
   );

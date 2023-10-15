@@ -4,6 +4,7 @@ import {
   IRunCmdServerData,
   ITermSocketEventType,
 } from "@/stores/term-socket/types.js";
+import { message } from "antd";
 
 export class MyTerm {
   term: Terminal; // xterm实例
@@ -11,14 +12,15 @@ export class MyTerm {
   ptyID: string;
   curInput: string; // 当前输入缓冲区
 
-  constructor(ptyID: string, socket: TermSocket) {
+  constructor(ptyID: string, socket: TermSocket, rows: number, cols: number) {
     this.term = new Terminal({
       cursorBlink: true,
       theme: {
         background: "#202B33",
         foreground: "#F5F8FA",
       },
-      rows: 15,
+      rows: rows,
+      cols: cols
     });
     this.greet();
 
@@ -40,6 +42,10 @@ export class MyTerm {
       if (e.code === "Enter") {
         // 回车键入
         if (this.curInput.length > 0) {
+          if (this.curInput === "exit") {
+            message.warning('请通过底部停止按钮退出终端', 2)
+            return;
+          }
           this.termSocket.runCmd(this.ptyID, {
             cmd: this.curInput,
           });

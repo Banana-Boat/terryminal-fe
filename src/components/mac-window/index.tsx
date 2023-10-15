@@ -3,9 +3,15 @@ import styles from "./index.module.scss";
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   children: React.ReactNode;
+  contentBgColor?: string;
 }
 
-function RegisterPage({ title, children, ...restProps }: IProps) {
+function RegisterPage({
+  title,
+  children,
+  contentBgColor,
+  ...restProps
+}: IProps) {
   return (
     <div {...restProps} className={styles.window}>
       <div className={styles.titleBar}>
@@ -17,7 +23,14 @@ function RegisterPage({ title, children, ...restProps }: IProps) {
         <span className={styles.title}>{title}</span>
         <div />
       </div>
-      <div className={styles.content}>{children}</div>
+      <div
+        style={{
+          backgroundColor: contentBgColor ?? "",
+        }}
+        className={styles.content}
+      >
+        {children}
+      </div>
     </div>
   );
 }

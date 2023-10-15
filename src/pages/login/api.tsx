@@ -14,7 +14,7 @@ interface LoginResp {
 }
 
 export const login = async (params: LoginReq) =>
-  axios.post<LoginReq, LoginResp>("/user/login", params).then(async (res) => {
+  axios.post<LoginReq, LoginResp>("/user/login", params).then((res) => {
     if (res) {
       const { token, user } = res;
       const { toggleLoginState, updateUserInfo } = userStore.getState();
@@ -41,7 +41,7 @@ interface UpdatePwdResp {
 export const updatePwd = async (params: UpdatePwdReq) =>
   axios
     .patch<UpdatePwdReq, UpdatePwdResp>("/user/updatePassword", params)
-    .then(async (res) => {
+    .then((res) => {
       if (res) return res.isOk;
       else return false;
     });

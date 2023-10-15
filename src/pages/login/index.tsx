@@ -34,13 +34,9 @@ function LoginPage({}: IProps) {
 
   /* 表单提交 */
   const onFinish = useCallback(async (value: IFormValues) => {
-    try {
-      if (await login({ ...value })) {
-        message.success("登录成功", 2);
-        navigate("/dashboard");
-      }
-    } catch (err) {
-      message.error("登录失败", 2);
+    if (await login({ ...value })) {
+      message.success("登录成功", 2);
+      navigate("/dashboard");
     }
   }, []);
 

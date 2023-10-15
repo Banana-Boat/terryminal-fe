@@ -5,25 +5,34 @@ import { PauseCircleOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { Button, message } from "antd";
 import styles from "./index.module.scss";
 import LaunchConfigModal from "./components/launch-config-modal";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { IFormValues as ILaunchConfigModalFormValues } from "./components/launch-config-modal";
 import { TermPanelMode } from "./types";
 import useTermSocketStore from "@/stores/term-socket";
+import MacWindow from "@/components/mac-window";
+import { userStore } from "@/stores/user";
 
 interface IProps {}
 
 function LearnPage({}: IProps) {
   const { terms, launchedTerms, updateLaunchedTerms } = useTermStore();
   const { termSocket } = useTermSocketStore();
+  const { nickname } = userStore.getState();
 
   /* Terminal Panel相关 */
-  const [termPanelMode, setTermPanelMode] = useState(TermPanelMode.SINGLE);
+  const termPanelMode = useRef(TermPanelMode.SINGLE);
+  const [isStopping, setIsStopping] = useState(false);
   const onStop = useCallback(() => {
     launchedTerms.forEach((termId) => {
       termSocket.end(termId);
     });
     termSocket.close();
-    updateLaunchedTerms([]);
+    setIsStopping(true);
+    setTimeout(() => {
+      updateLaunchedTerms([]);
+      setIsStopping(false);
+      message.success("终端实例已停止");
+    }, 4000);
   }, [launchedTerms, termSocket, updateLaunchedTerms]);
 
   /* Launch Panel相关 */
@@ -34,7 +43,7 @@ function LearnPage({}: IProps) {
       setIsShowLaunchConfigModal(false);
       setIsLaunching(true);
       if (await termSocket.open()) {
-        setTermPanelMode(value.mode);
+        termPanelMode.current = value.mode;
         updateLaunchedTerms(value.termsToLaunch);
         value.termsToLaunch.forEach((termId) => {
           termSocket.start(termId);
@@ -50,13 +59,27 @@ function LearnPage({}: IProps) {
   return launchedTerms.length !== 0 ? (
     <>
       <div className={styles.termBox}>
-        {launchedTerms.map((termId) => (
-          <Terminal key={termId} ptyID={termId} />
-        ))}
+        <div className={styles.termBoxInner}>
+          {launchedTerms.map((termId) => (
+            <MacWindow
+              key={termId}
+              title={`${nickname}@Terryminal:~/learn`}
+              contentBgColor="#202B33"
+            >
+              <Terminal
+                ptyID={termId}
+                rows={Math.floor(
+                  (window.innerHeight - 350) / 18 / termPanelMode.current
+                )}
+                cols={Math.floor((window.innerWidth * 0.6 - 100) / 9)}
+              />
+            </MacWindow>
+          ))}
+        </div>
         <Button
           onClick={onStop}
+          loading={isStopping}
           style={{ width: "30%", margin: "0 auto" }}
-          type="primary"
           shape="round"
           icon={<PauseCircleOutlined />}
         >

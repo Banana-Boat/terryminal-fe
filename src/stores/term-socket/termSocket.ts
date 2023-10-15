@@ -22,7 +22,6 @@ export class TermSocket {
       this.socket.addEventListener("message", (msg) => {
         const { event, ptyID, data } = JSON.parse(msg.data) as ITermSocketMessage;
         const listeners = this.msgListeners[ptyID] ?? [];
-        console.log("onmessage: ", event, ptyID, data);
         listeners.forEach((listener) => listener(event, data));
       });
 
@@ -32,7 +31,7 @@ export class TermSocket {
         resolve(false)
       });
       this.socket.addEventListener("open", () => {
-        console.log("onopen");
+        console.log("websocket connected");
         resolve(true)
       });
     })

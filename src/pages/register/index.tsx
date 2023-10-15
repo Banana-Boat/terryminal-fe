@@ -35,19 +35,15 @@ function RegisterPage({}: IProps) {
   }, []);
 
   const onFinish = useCallback(async (value: IFormValues) => {
-    try {
-      if (
-        await register({
-          email: value.email,
-          password: value.password,
-          nickname: value.nickname,
-        })
-      ) {
-        message.success("注册成功", 2);
-        navigate("/login");
-      }
-    } catch (err) {
-      message.error("注册失败", 2);
+    if (
+      await register({
+        email: value.email,
+        password: value.password,
+        nickname: value.nickname,
+      })
+    ) {
+      message.success("注册成功", 2);
+      navigate("/login");
     }
   }, []);
 

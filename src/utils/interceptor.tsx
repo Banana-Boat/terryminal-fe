@@ -32,17 +32,18 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
+    /* 处理status code为200的情况 */
     const { flag, msg, data } = response.data;
-
-    if (!flag) {
-      message.error(msg, 2);
-      return false;
-    }
-
+    if (!flag) message.error(msg, 2);
     return data;
   },
   (error) => {
-    return Promise.reject(error);
+    /* 处理status code不为200的情况 */
+    const { data } = error.response;
+    if (data) {
+      const { msg } = data;
+      if (!msg) message.error(msg, 2);
+    }
   }
 );
 

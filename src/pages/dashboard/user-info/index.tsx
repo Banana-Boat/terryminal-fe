@@ -23,16 +23,12 @@ function UserInfoPage({}: IProps) {
   const onFinish = useCallback(async (value: IFormValues) => {
     if (!value.nickname && !value.password) return;
 
-    try {
-      if (
-        await updateUserInfo(
-          formatFormData({ password: value.password, nickname: value.nickname })
-        )
-      ) {
-        message.success("修改成功", 2);
-      }
-    } catch (err) {
-      message.error("修改失败", 2);
+    if (
+      await updateUserInfo(
+        formatFormData({ password: value.password, nickname: value.nickname })
+      )
+    ) {
+      message.success("修改成功", 2);
     }
   }, []);
 

@@ -80,12 +80,13 @@ function LaunchConfigModal({ isShow, onCancel, onLaunch }: IProps) {
           ]}
         >
           <Select
-            mode="multiple"
             onChange={() => {}}
             options={terms.map((item) => ({
               label: item.name + `（${item.remark}）`,
               value: item.id,
             }))}
+            placement="topLeft"
+            mode="multiple"
             allowClear
             showSearch={false}
             placeholder="请选择终端实例"

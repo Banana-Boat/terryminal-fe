@@ -11,18 +11,12 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      getUserInfo()
-        .then((res) => {
-          if (res) navigate("/dashboard");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      getUserInfo().then((res) => {
+        if (res) navigate("/dashboard");
+      });
     }
 
-    getTermTemplates().catch((err) => {
-      console.log(err);
-    });
+    getTermTemplates();
   }, []);
 
   return <>{router}</>;

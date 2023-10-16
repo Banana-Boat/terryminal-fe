@@ -1,5 +1,7 @@
 import axios from "axios";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
+import { handleAuthError } from ".";
 
 const instance = axios.create({
   baseURL: "/api",
@@ -39,6 +41,10 @@ instance.interceptors.response.use(
   },
   (error) => {
     /* 处理status code不为200的情况 */
+    if (error.response.status === 401) {
+      handleAuthError();
+      localStorage.removeItem("token");
+    }
     const { data } = error.response;
     if (data) {
       const { msg } = data;

@@ -17,10 +17,19 @@ import {
 } from "@chatscope/chat-ui-kit-react";
 import { InitMsg } from "./constants";
 import robotIcon from "@/assets/robot.svg";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { ClearOutlined } from "@ant-design/icons";
+import { gfmHeadingId } from "marked-gfm-heading-id";
+import { mangle } from "marked-mangle";
 
 interface IProps {}
+
+/* 处理markdown相关问题 */
+const options = {
+  prefix: "my-prefix-",
+};
+marked.use(gfmHeadingId(options));
+marked.use(mangle());
 
 function ChatBot({}: IProps) {
   const [inputValue, setInputValue] = useState("");
@@ -41,36 +50,28 @@ function ChatBot({}: IProps) {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
 
-    try {
-      getChatMessage(
-        { messages: [...messages, userMessage] },
-        (event, data) => {
-          switch (event) {
-            case "message":
-              updateMsgBuf(msgBufRef.current + data);
-              break;
+    getChatMessage({ messages: [...messages, userMessage] }, (event, data) => {
+      switch (event) {
+        case "message":
+          updateMsgBuf(msgBufRef.current + data);
+          break;
 
-            case "end":
-              const msg = {
-                role: Role.ASSISTANT,
-                content: msgBufRef.current,
-              };
-              setMessages((prev) => {
-                return [...prev, msg];
-              });
-              updateMsgBuf("");
-              break;
+        case "end":
+          const msg = {
+            role: Role.ASSISTANT,
+            content: msgBufRef.current,
+          };
+          setMessages((prev) => [...prev, msg]);
+          updateMsgBuf("");
+          break;
 
-            case "error":
-              console.log("sse error", data);
-              updateMsgBuf("");
-              break;
-          }
-        }
-      );
-    } catch (err) {
-      console.log("sse error", err);
-    }
+        case "error":
+          message.error("AI机器人服务异常，请稍后重试", 2);
+          console.log("sse error", data);
+          updateMsgBuf("");
+          break;
+      }
+    });
   }, [inputValue, messages]);
 
   const onNewChat = useCallback(() => {

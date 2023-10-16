@@ -31,7 +31,7 @@ function LearnPage({}: IProps) {
     setTimeout(() => {
       updateLaunchedTerms([]);
       setIsStopping(false);
-      message.success("终端实例已停止");
+      message.success("终端实例已停止", 2);
     }, 4000);
   }, [launchedTerms, termSocket, updateLaunchedTerms]);
 
@@ -49,7 +49,7 @@ function LearnPage({}: IProps) {
           termSocket.start(termId);
         });
       } else {
-        message.error("终端连接失败，请稍后再试");
+        message.error("终端连接失败，请稍后再试", 2);
       }
       setIsLaunching(false);
     },
@@ -69,7 +69,7 @@ function LearnPage({}: IProps) {
               <Terminal
                 ptyID={termId}
                 rows={Math.floor(
-                  (window.innerHeight - 350) / 18 / termPanelMode.current
+                  (window.innerHeight - 320) / 18 / termPanelMode.current
                 )}
                 cols={Math.floor((window.innerWidth * 0.6 - 100) / 9)}
               />
@@ -95,7 +95,7 @@ function LearnPage({}: IProps) {
       <Button
         onClick={() => {
           if (terms.length === 0) {
-            message.warning("请先创建终端实例");
+            message.warning("请先创建终端实例", 2);
             return;
           }
           setIsShowLaunchConfigModal(true);

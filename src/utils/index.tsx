@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 /*  删除对象中值为 空或undefined或null 的属性。注：antd的Form中输入框的值可能为undefined或"" */
 export function formatFormData(data: any) {
   for (const key in data) {
@@ -19,4 +21,11 @@ export function formatTime(seconds: number) {
     (remainingSeconds >= 0 ? remainingSeconds + "秒" : "");
 
   return res;
+}
+
+/* 鉴权失败处理 */
+export function handleAuthError() {
+  localStorage.removeItem("token");
+  const navigate = useNavigate();
+  navigate("/login");
 }

@@ -1,0 +1,13 @@
+.launch-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.launch-btn {
+  transform: scale(1.2);
+}
+.launch-btn:hover {
+  transform: scale(1.5);
+  transition-timing-function: ease-out;
+}

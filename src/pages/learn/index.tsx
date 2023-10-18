@@ -1,26 +1,24 @@
 import ChatBot from "@/components/chat-bot";
 import Terminal from "@/components/terminal";
 import { useTermStore } from "@/stores/term";
-import { PauseCircleOutlined, PlayCircleOutlined } from "@ant-design/icons";
+import { PauseCircleOutlined } from "@ant-design/icons";
 import { Button, message } from "antd";
 import styles from "./index.module.scss";
-import LaunchConfigModal from "./components/launch-config-modal";
-import { useCallback, useRef, useState } from "react";
-import { IFormValues as ILaunchConfigModalFormValues } from "./components/launch-config-modal";
-import { TermPanelMode } from "./types";
+import { useCallback, useState } from "react";
 import useTermSocketStore from "@/stores/term-socket";
 import MacWindow from "@/components/mac-window";
 import { userStore } from "@/stores/user";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {}
 
 function LearnPage({}: IProps) {
-  const { terms, launchedTerms, updateLaunchedTerms } = useTermStore();
+  const { launchedTerms, updateLaunchedTerms } = useTermStore();
   const { termSocket } = useTermSocketStore();
   const { nickname } = userStore.getState();
+  const navigate = useNavigate();
 
   /* Terminal Panel相关 */
-  const termPanelMode = useRef(TermPanelMode.SINGLE);
   const [isStopping, setIsStopping] = useState(false);
   const onStop = useCallback(() => {
     launchedTerms.forEach((termId) => {
@@ -32,32 +30,17 @@ function LearnPage({}: IProps) {
       updateLaunchedTerms([]);
       setIsStopping(false);
       message.success("终端实例已停止", 2);
+      navigate("/dashboard");
     }, 4000);
   }, [launchedTerms, termSocket, updateLaunchedTerms]);
 
-  /* Launch Panel相关 */
-  const [isShowLaunchConfigModal, setIsShowLaunchConfigModal] = useState(false);
-  const [isLaunching, setIsLaunching] = useState(false);
-  const onLaunch = useCallback(
-    async (value: ILaunchConfigModalFormValues) => {
-      setIsShowLaunchConfigModal(false);
-      setIsLaunching(true);
-      if (await termSocket.open()) {
-        termPanelMode.current = value.mode;
-        updateLaunchedTerms(value.termsToLaunch);
-        value.termsToLaunch.forEach((termId) => {
-          termSocket.start(termId);
-        });
-      } else {
-        message.error("终端连接失败，请稍后再试", 2);
-      }
-      setIsLaunching(false);
-    },
-    [termSocket, updateLaunchedTerms]
-  );
-
-  return launchedTerms.length !== 0 ? (
-    <>
+  return (
+    <div
+      style={{
+        display: "flex",
+        height: "100vh",
+      }}
+    >
       <div className={styles.termBox}>
         <div className={styles.termBoxInner}>
           {launchedTerms.map((termId) => (
@@ -69,7 +52,7 @@ function LearnPage({}: IProps) {
               <Terminal
                 ptyID={termId}
                 rows={Math.floor(
-                  (window.innerHeight - 320) / 18 / termPanelMode.current
+                  (window.innerHeight - 280) / 18 / launchedTerms.length
                 )}
                 cols={Math.floor((window.innerWidth * 0.6 - 100) / 9)}
               />
@@ -89,32 +72,6 @@ function LearnPage({}: IProps) {
       <div className={styles.chatBox}>
         <ChatBot />
       </div>
-    </>
-  ) : (
-    <div className={styles.launchPanel}>
-      <Button
-        onClick={() => {
-          if (terms.length === 0) {
-            message.warning("请先创建终端实例", 2);
-            return;
-          }
-          setIsShowLaunchConfigModal(true);
-        }}
-        loading={isLaunching}
-        className={styles.launchBtn}
-        type="primary"
-        shape="round"
-        icon={<PlayCircleOutlined />}
-        size="large"
-      >
-        启动 Launch
-      </Button>
-
-      <LaunchConfigModal
-        isShow={isShowLaunchConfigModal}
-        onLaunch={onLaunch}
-        onCancel={() => setIsShowLaunchConfigModal(false)}
-      />
     </div>
   );
 }

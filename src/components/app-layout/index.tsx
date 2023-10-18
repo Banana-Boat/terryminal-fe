@@ -69,7 +69,7 @@ function AppLayout() {
                   key: "2",
                   icon: <CodeOutlined />,
                   label: "学习",
-                  onClick: () => navigate("learn"),
+                  onClick: () => navigate("launch-learning"),
                 },
                 {
                   key: "3",

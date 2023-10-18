@@ -10,6 +10,7 @@ import TermManagementPage from "@/pages/dashboard/term-management";
 import UserInfoPage from "@/pages/dashboard/user-info";
 import NotFoundPage from "@/pages/not-found";
 import { useUserStore } from "@/stores/user";
+import LaunchLearningPage from "@/pages/launch-learning";
 
 function AuthRouter({ children }: { children: React.ReactNode }) {
   const { isLogin } = useUserStore();
@@ -56,10 +57,10 @@ export const routes: RouteObject[] = [
         ],
       },
       {
-        path: "learn",
+        path: "launch-learning",
         element: (
           <AuthRouter>
-            <LearnPage />
+            <LaunchLearningPage />
           </AuthRouter>
         ),
       },
@@ -76,5 +77,13 @@ export const routes: RouteObject[] = [
         element: <NotFoundPage />,
       },
     ],
+  },
+  {
+    path: "learn",
+    element: (
+      <AuthRouter>
+        <LearnPage />
+      </AuthRouter>
+    ),
   },
 ];

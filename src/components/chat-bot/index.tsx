@@ -66,8 +66,7 @@ function ChatBot({}: IProps) {
           break;
 
         case "error":
-          message.error("AI机器人服务异常，请稍后重试", 2);
-          console.log("sse error", data);
+          message.error(data, 2);
           updateMsgBuf("");
           break;
       }

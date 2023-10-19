@@ -2,10 +2,11 @@ import { useUserStore } from "@/stores/user";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Descriptions, Drawer, Form, Input, message } from "antd";
 import "./index.module.scss";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { updateUserInfo } from "./api";
 import { formatFormData } from "@/utils";
 import PageHeader from "@/components/page-header";
+import { getUserInfo } from "@/utils/api";
 
 interface IProps {}
 
@@ -19,6 +20,10 @@ function UserInfoPage({}: IProps) {
   const { nickname, email, chatbotToken } = useUserStore();
   const [isShowEditUserInfoDrawer, setIsShowEditUserInfoDrawer] =
     useState(false);
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   const onFinish = useCallback(async (value: IFormValues) => {
     if (!value.nickname && !value.password) return;

@@ -67,12 +67,6 @@ function AppLayout() {
                 },
                 {
                   key: "2",
-                  icon: <CodeOutlined />,
-                  label: "学习",
-                  onClick: () => navigate("launch-learning"),
-                },
-                {
-                  key: "3",
                   icon: <InfoCircleOutlined />,
                   label: "关于",
                   onClick: () => navigate("about"),

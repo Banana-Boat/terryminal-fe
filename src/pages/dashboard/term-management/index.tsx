@@ -15,11 +15,21 @@ import CreateTermDrawer, {
 import { ColumnsType } from "antd/es/table";
 import { ITerminal } from "@/stores/term/types";
 import { formatTime } from "@/utils";
-import { InfoCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  InfoCircleOutlined,
+  PlayCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import EditableCell from "./components/editable-cell";
-import "./index.module.scss";
+
+import styles from "./index.module.scss";
 import { termStore, useTermStore } from "@/stores/term";
 import { createTerm, destroyTerm, getUserTerms, updateTermInfo } from "./api";
+import useTermSocketStore from "@/stores/term-socket";
+import { useNavigate } from "react-router-dom";
+import LaunchConfigModal, {
+  IFormValues as ILaunchConfigModalFormValues,
+} from "./components/launch-config-modal";
 
 interface IProps {}
 
@@ -133,6 +143,10 @@ const columns: ColumnsType<ITerminal> = [
 ];
 
 function TermManagementPage({}: IProps) {
+  const { terms, updateLaunchedTerms } = useTermStore();
+  const { termSocket } = useTermSocketStore();
+  const navigate = useNavigate();
+
   /* 创建实例抽屉相关 */
   const [isShowCreateTermDrawer, setIsShowCreateTermDrawer] = useState(false);
   const onCreateTermDrawerFinish = useCallback(
@@ -148,7 +162,6 @@ function TermManagementPage({}: IProps) {
   );
 
   /* 表格相关 */
-  const { terms } = useTermStore();
   const [dataSource, setDataSource] = useState<
     (ITerminal & { key: React.Key })[]
   >([]);
@@ -165,6 +178,27 @@ function TermManagementPage({}: IProps) {
     );
   }, [terms]);
 
+  /* Launch 相关 */
+  const [isShowLaunchConfigModal, setIsShowLaunchConfigModal] = useState(false);
+  const [isLaunching, setIsLaunching] = useState(false);
+  const onLaunch = useCallback(
+    async (value: ILaunchConfigModalFormValues) => {
+      setIsShowLaunchConfigModal(false);
+      setIsLaunching(true);
+      if (await termSocket.open()) {
+        updateLaunchedTerms(value.termsToLaunch);
+        value.termsToLaunch.forEach((termId) => {
+          termSocket.start(termId);
+        });
+        navigate("/learn");
+      } else {
+        message.error("终端连接失败，请稍后再试", 2);
+      }
+      setIsLaunching(false);
+    },
+    [termSocket, updateLaunchedTerms]
+  );
+
   return (
     <>
       <PageHeader
@@ -172,7 +206,7 @@ function TermManagementPage({}: IProps) {
         btns={
           <Button
             onClick={() => setIsShowCreateTermDrawer(true)}
-            type="primary"
+            type={terms.length === 0 ? "primary" : "default"}
             shape="round"
             icon={<PlusOutlined />}
           >
@@ -192,6 +226,27 @@ function TermManagementPage({}: IProps) {
         dataSource={dataSource}
         pagination={false}
         scroll={{ x: 950 }}
+      />
+      {terms.length !== 0 && (
+        <div className={styles.launchBtnWrapper}>
+          <Button
+            onClick={() => setIsShowLaunchConfigModal(true)}
+            loading={isLaunching}
+            className={styles.launchBtn}
+            type="primary"
+            shape="round"
+            icon={<PlayCircleOutlined />}
+            size="large"
+          >
+            启动 Launch
+          </Button>
+        </div>
+      )}
+
+      <LaunchConfigModal
+        isShow={isShowLaunchConfigModal}
+        onLaunch={onLaunch}
+        onCancel={() => setIsShowLaunchConfigModal(false)}
       />
 
       <CreateTermDrawer

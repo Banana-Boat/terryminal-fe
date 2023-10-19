@@ -10,3 +10,15 @@
     border-radius: 2px;
   }
 }
+
+.launch-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  width: 100%;
+  height: 100px;
+}
+.launch-btn:hover {
+  transform: scale(1.15);
+  transition-timing-function: ease-out;
+}

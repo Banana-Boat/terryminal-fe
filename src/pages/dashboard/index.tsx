@@ -12,7 +12,7 @@ function DashboardLayout({}: IProps) {
   return (
     <>
       <Layout>
-        <Sider theme="light" collapsible width={200}>
+        <Sider theme="light" width={200}>
           <Menu
             mode="inline"
             defaultSelectedKeys={["1"]}

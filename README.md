@@ -23,7 +23,7 @@
 
 ## 主要依赖
 
-- [**React Native**](https://github.com/facebook/react-native)
+- [**React**](https://github.com/facebook/react)
 - [**Ant Design**](https://github.com/ant-design/ant-design)
 - [**Marked**](https://github.com/markedjs/marked)（Markdown文本解析）
 - [**Typed.js**](https://github.com/mattboldt/typed.js)（打字效果库）
